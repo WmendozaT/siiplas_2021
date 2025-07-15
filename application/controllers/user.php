@@ -35,7 +35,9 @@ class User extends CI_Controller{
 
         $this->notificaciones=$this->session->userData('estado_notificaciones');
         $this->verif_mes=$this->session->userdata('mes_actual');
-        $this->conf_ajuste_poa=$this->session->userdata('conf_ajuste_poa');
+        $this->conf_ajuste_poa=$this->session->userdata('conf_ajuste_poa'); 
+        $this->conf_credenciales=$this->session->userdata('conf_psw'); /// configuracion de credenciales
+        $this->fun_credencial=$this->session->userdata('credencial_funcionario'); /// credenciales del funcionario
         //$this->load->library('genera_informacion');
     }
 
@@ -272,6 +274,33 @@ class User extends CI_Controller{
             $data['mensaje']='';
             $data['seguimiento_poa']='';
             $data['popup_saldos']='';
+            $data['popup_credenciales']='';
+
+            //// ------ CREDENCIALES
+            if(($this->conf_credenciales==1 & $this->fun_credencial==0) & $this->fun_id!=399){
+                $data['popup_credenciales']='
+                    <div id="myModal" class="modal fade" data-backdrop="static" data-keyboard="false" style="">
+                        <div class="modal-dialog modal-login" id="mdialTamanio_saldos">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 style="color:green; text-align:center"><b>Actualización de Credenciales de Acceso al SIIPLAS</b></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="alert alert-success" role="alert">
+                                        <p>Estimad@: <b>'.$this->session->userdata('funcionario').'</b>, para garantizar la seguridad de información, se implemento nuevas medidas de seguridad para proteger su cuenta de acceso al Sistema de Planificación <b>SIIPLAS.</b></p><br>
+                                        <p>Como parte de estas medidas es necesario que actualice su Contraseña. Esta acción es parte de nuestras politicas vigente en el <b>Plan de Seguridad de la Información PSI.</p>
+                                    </div>
+                                   
+                                </div>
+                                <div class="modal-footer">
+                                <a href="'.base_url().'index.php/admin/logout" class="btn btn-danger">Cerrar sesion</a>
+                                <a href="'.base_url().'index.php/admin/mod_contra" class="btn btn-success">Actualizar ahora</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>';
+            }
+
 
             ///------- Verificando Saldos
               //if($this->conf_ajuste_poa==1 & $this->dist_id!=10 & $this->dist_id!=5 & $this->gestion>2023){
@@ -328,6 +357,8 @@ class User extends CI_Controller{
                     $data['seguimiento_poa']='';
                 }
                 ///=================================================
+
+
             }
 
             $this->load->view('admin/dashboard',$data);
@@ -1066,6 +1097,7 @@ class User extends CI_Controller{
             'funcionario' => $data[0]['fun_nombre']." ".$data[0]['fun_paterno'],
             'usuario' => $data[0]['fun_usuario'],
             'cargo' => $data[0]['fun_cargo'],
+            'credencial_funcionario' => $data[0]['sw_pass'], // 0,1
             'fun_estado' => $data[0]['fun_estado'],
             'com_id' => $data[0]['cm_id'], /// componente para el seguimeinto
             'fun_id' => $data[0]['fun_id'],
@@ -1080,6 +1112,7 @@ class User extends CI_Controller{
             'gestion' => $gestion[0]['ide'],
             'mes' => $gestion[0]['conf_mes'],
             'conf_ajuste_poa' => $gestion[0]['conf_ajuste_poa'],
+            'conf_psw' => $gestion[0]['conf_psw'], /// Credenciales
             'estado_notificaciones' => $gestion[0]['conf_poa'], /// Estado para las Notificaciones 0:no activo, 1: Habilitado
             'entidad' => $gestion[0]['conf_nombre_entidad'],
             'trimestre' => $gestion[0]['conf_mes_otro'], /// Trimestre 1,2,3,4

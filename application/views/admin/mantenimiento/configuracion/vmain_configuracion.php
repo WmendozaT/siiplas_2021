@@ -212,6 +212,9 @@
                                                 <li>
                                                     <a href="#tab-r11" data-toggle="tab"><span class="badge bg-color-greenLight txt-color-white">11</span>CONF. AJUSTE DE SALDOS</a>
                                                 </li>
+                                                <li>
+                                                    <a href="#tab-r12" data-toggle="tab"><span class="badge bg-color-greenLight txt-color-white">12</span>CONF. AJUSTE DE CREDENCIALES</a>
+                                                </li>
                                             </ul>
                                             <div class="tab-content">
                                                 <div class="tab-pane active" id="tab-r1">
@@ -770,7 +773,7 @@
                                                         <article class="col-sm-12 col-md-6 col-lg-6">
                                                             <div class="widget-body">
                                                                 <form name="form_gest2" id="form_gest2" method="post" class="form-horizontal">
-                                                                    <input type="text" name="ide" id="ide" value="<?php echo $conf[0]['ide'] ?>">
+                                                                    <input type="hidden" name="ide" id="ide" value="<?php echo $conf[0]['ide'] ?>">
                                                                     <fieldset>
                                                                         <legend>CONFIGURAR SALDOS POA</legend>
                                                                         
@@ -780,6 +783,43 @@
                                                                                 <select class="select2" id="ajuste" name="ajuste" title="AJUSTE POA">
                                                                                     <?php 
                                                                                         if($conf[0]['conf_ajuste_poa']==0){?>
+                                                                                            <option value="0" selected>NO</option>
+                                                                                            <option value="1" >SI</option>
+                                                                                            <?php 
+                                                                                        }
+                                                                                        else{?>
+                                                                                            <option value="0">NO</option>
+                                                                                            <option value="1" selected>SI</option>
+                                                                                            <?php 
+                                                                                        }
+                                                                                    ?>      
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </fieldset>
+                                                                </form>
+                                                            </div>
+                                                        </article>
+                                                    </p>
+                                                </div>
+
+                                                <div class="tab-pane" id="tab-r12">
+                                                    <p>
+                                                        <article class="col-sm-12 col-md-3 col-lg-3">
+                                                        </article>
+                                                        <article class="col-sm-12 col-md-6 col-lg-6">
+                                                            <div class="widget-body">
+                                                                <form name="form_gest2" id="form_gest2" method="post" class="form-horizontal">
+                                                                    <input type="hidden" name="ide" id="ide" value="<?php echo $conf[0]['ide'] ?>">
+                                                                    <fieldset>
+                                                                        <legend>CONFIGURAR CREDENCIALES DE ACCESO</legend>
+                                                                        
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-2 control-label">ACTUALIZAR CREDENCIALES?</label>
+                                                                            <div class="col-md-10">
+                                                                                <select class="select2" id="credenciales" name="credenciales" title="AJUSTE CREDENCIALES">
+                                                                                    <?php 
+                                                                                        if($conf[0]['conf_psw']==0){?>
                                                                                             <option value="0" selected>NO</option>
                                                                                             <option value="1" >SI</option>
                                                                                             <?php 
@@ -1404,7 +1444,7 @@
 
 
                 //// AJUSTE POA DE SALDOS
-                $("#ajuste").change(function () {    
+                $("#ajuste").change(function () {  
                     var ajuste = $(this).val();
                     var id = $('[name="ide"]').val(); /// id
 
@@ -1419,6 +1459,41 @@
                     alertify.confirm(mensaje, function (a) {
                         if (a) {
                             var url = "<?php echo site_url().'/mantenimiento/cconfiguracion/valida_update_saldospoa'?>";
+                            $.ajax({
+                                type:"post",
+                                url:url,
+                                data:{estado:ajuste,g_id:id},
+                                success:function(datos){
+                                    if(datos.trim() =='true'){
+                                        window.location.reload(true);
+                                    }else{
+                                        alertify.error("Error al Actualizar ..");
+                                    }
+                            }});
+                        } else {
+                            alertify.error("OPCI\u00D3N CANCELADA");
+                        }
+                      });
+
+                });
+
+
+                //// AJUSTE CREDENCIALES DE ACCESO
+                $("#credenciales").change(function () {  
+                    var ajuste = $(this).val();
+                    var id = $('[name="ide"]').val(); /// id
+
+                    var mensaje='';
+                    if(ajuste==1){
+                        mensaje='HABILITAR AJUSTE DE CREDENCIALES DE ACCESO ?';
+                    }
+                    else{
+                        mensaje='DESHABILITAR AJUSTE DE CREDENCIALES ?';
+                    }
+
+                    alertify.confirm(mensaje, function (a) {
+                        if (a) {
+                            var url = "<?php echo site_url().'/mantenimiento/cconfiguracion/valida_update_credenciales'?>";
                             $.ajax({
                                 type:"post",
                                 url:url,

@@ -333,6 +333,10 @@
           </div>
       </div>
 
+    <!--  MODAL DE ALERTA CREDENCIALES     -->
+    <?php echo $popup_credenciales; ?>
+    <!--  END MODAL  -->
+
     <!--  MODAL DE ALERTA DE SALDOS     -->
     <?php echo $popup_saldos; ?>
     <!--  END MODAL  -->

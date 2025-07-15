@@ -202,7 +202,7 @@
                                     <div class="row align-items-center">
                                         <div class="col">
                                             <div class="form-floating mb-2">
-                                                <input tabindex="3" id="password" class="form-control form-input-bg" name="password" type="text" autocomplete="off" placeholder="CONTRASEÑA" minlength="6" maxlength="20"/>
+                                                <input tabindex="3" id="password" class="form-control form-input-bg" name="password" type="password" autocomplete="off" placeholder="CONTRASEÑA" minlength="6" maxlength="20"/>
                                                 <label for="password">PASSWORD</label>
                                                 <div id="pass" class="text-danger text-start" style="visibility: hidden;">
                                                     Este campo es requerido

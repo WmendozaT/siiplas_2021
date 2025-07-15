@@ -725,7 +725,7 @@ class Funcionario extends CI_Controller {
             position: relative;
         }
 
-  .form-container {
+        .form-container {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 20px;
@@ -978,51 +978,54 @@ class Funcionario extends CI_Controller {
         $this->form_validation->set_rules('password', 'password', 'required|trim');
         $this->form_validation->set_rules('password_confirm', 'password_confirm', 'required|trim');
 
-        if ($this->form_validation->run()) {
-            echo "hola mundo";
+            if ($this->form_validation->run()) {
+                $apassword = $this->security->sanitize_filename($this->input->post('pass'), TRUE); /// password anterior
+                $password = $this->security->sanitize_filename($this->input->post('password_confirm'), TRUE); /// password nuevo
+
+                $verifica = (($this->encrypt->decode($this->model_funcionario->verificar_password($this->fun_id))) == $apassword) ? true : false ;
+                if($verifica){
+
+                    ///----- Historial
+                    $data_to_store = array( 
+                        'fun_id' => $this->fun_id,
+                        'fun_apassword' => $apassword,
+                    );
+                    $this->db->insert('historial_psw', $this->security->xss_clean($data_to_store));
+                    $fun_id=$this->db->insert_id();
+
+                    ///---- Update
+                    $update_fun = array(
+                        'fun_password' => $this->encrypt->encode($password),
+                        'sw_pass' => 1,
+                    );
+                    $this->db->where('fun_id', $this->fun_id);
+                    $this->db->update('funcionario', $this->security->xss_clean($update_fun));
+
+
+                    echo "
+                        <script>
+                            alert('Se Cambio la Contraseña Correctamente');
+                        </script>
+                    ";
+                    redirect('/','refresh');
+                }
+                else{
+                    echo "
+                        <script>
+                            alert('La Contraseña Anterior No Coincide');
+                        </script>
+                    ";
+                    $this->nueva_contra();
+                }
+
+               //echo $passworda.'--'.$password;
+               // echo "hola mundo";
+            }
+            else{
+                $this->nueva_contra();
+            }
         }
-        else{
-            echo "Error!!!";
-        }
-        
-          // $this->form_validation->set_rules('id', 'Id Actividad', 'required|trim');
-
-          // if ($this->form_validation->run()) {
-          //   $filename = $_FILES["file1"]["name"]; ////// datos del archivo 
-          //   $file_basename = substr($filename, 0, strripos($filename, '.')); ///// nombre del archivo
-          //   $file_ext = substr($filename, strripos($filename, '.')); ///// Extension del archivo
-          //   $filesize = $_FILES["file1"]["size"]; //// Tamaño del archivo
-
-          //   $unidad= $this->model_estructura_org->get_actividad($this->input->post('id')); // Datos de la Unidad
-
-          //   if($filename!='' & $filesize!=0){
-          //     $newfilename = ''.$this->input->post('id').'-'.substr(md5(uniqid(rand())),0,5).$file_ext;
-          //     /*--------------------------------------------------*/
-          //     $update_dato= array(
-          //       'img' => $newfilename,
-          //       'fun_id' => $this->fun_id,
-          //     );
-          //     $this->db->where('act_id', $unidad[0]['act_id']);
-          //     $this->db->update('unidad_actividad', $update_dato);
-          //     /*--------------------------------------------------*/
-              
-          //     move_uploaded_file($_FILES["file1"]["tmp_name"],"fotos/" . $newfilename); // Guardando la foto
-
-          //     $this->session->set_flashdata('success','SE GUARDO CORRECTAMENTE LA FOTO DEL ESTABLECIMIENTO');
-          //     redirect(site_url("").'/prog/datos_unidad/'.$this->input->post('id').'#tabs-f');
-          //   }
-          //   else{
-          //     $this->session->set_flashdata('danger','ERROR AL GUARDAR ARCHIVO');
-          //     redirect(site_url("").'/prog/datos_unidad/'.$this->input->post('id').'#tabs-f');
-          //   }
-
-          // }
-          // else{
-          //   $this->session->set_flashdata('danger','ERROR !!!! ');
-          //   redirect(site_url("").'/prog/datos_unidad/'.$this->input->post('id').'#tabs-f');
-          // }
-             
-        }
+        $this->nueva_contra();
     }
 
 

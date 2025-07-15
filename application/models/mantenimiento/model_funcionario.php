@@ -105,6 +105,7 @@ class Model_funcionario extends CI_Model {
             else{
                 $sql = 'select * 
                         from vlist_funcionario vf
+                        Inner Join _distritales as dist On dist.dist_id=vf.fun_dist
                         Inner Join _componentes as c On c.com_id=vf.cm_id
                         Inner Join tipo_subactividad as tpa On tpa.tp_sact=c.tp_sact
                         Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id

@@ -4698,3 +4698,13 @@ PARA CONTROL DE REGISTRO DE SEGUIMIENTO POA
   
   primary key(reg_id)
  );
+
+ ----- HISTORIAL DE CONTRASEÑAS
+
+  create table historial_psw(
+  psw_id serial NOT NULL,
+  fun_id integer,
+  fun_apassword character varying(500) NOT NULL DEFAULT '0'::character varying,
+  fun_estado integer NOT NULL DEFAULT 0,
+  primary key(psw_id)
+ );

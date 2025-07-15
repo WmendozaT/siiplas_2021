@@ -61,7 +61,7 @@ public function __construct()
 	public function get_datos_usuario($fun_id){
         $sql = 'select tmp.fun_id,tmp.uni_id,tmp.car_id,tmp.fun_nombre,tmp.fun_ci,tmp.cm_id,tmp.fun_domicilio,tmp.fun_telefono,tmp.fun_estado,
 		tmp.fun_usuario,tmp.fun_password,tmp.fun_estado,tmp.fun_paterno,tmp.fun_materno,tmp.fun_cargo,tmp.fecha_creacion,
-		tmp.fun_adm,tmp.fun_dist,tmp.uni_unidad,MIN(tmp.r_id) as rol_id,ds.dist_id,ds.dep_id,ds.dist_distrital,ds.dist_estado,ds.dist_tp,tmp.tp_adm,tmp.r_estado
+		tmp.fun_adm,tmp.fun_dist,tmp.uni_unidad,MIN(tmp.r_id) as rol_id,ds.dist_id,ds.dep_id,ds.dist_distrital,ds.dist_estado,ds.dist_tp,tmp.tp_adm,tmp.r_estado,tmp.sw_pass
 		from (select f.*, r.r_id,r.r_estado
 		from fun_rol r right join (select f.*, u.uni_unidad
 		from (select *
@@ -74,7 +74,7 @@ public function __construct()
 		where tmp.fun_id = '.$fun_id.'
 		GROUP BY tmp.fun_id,tmp.uni_id,tmp.car_id,tmp.fun_nombre,tmp.fun_ci,tmp.cm_id,tmp.fun_domicilio,tmp.fun_telefono,tmp.fun_estado,
 		tmp.fun_usuario,tmp.fun_password,tmp.fun_estado,tmp.fun_paterno,tmp.fun_materno,tmp.fun_cargo,tmp.fecha_creacion,
-		tmp.fun_adm,tmp.fun_dist,tmp.uni_unidad,ds.dist_id,ds.dep_id,ds.dist_distrital,ds.dist_estado,ds.dist_tp,tmp.tp_adm,tmp.r_estado';
+		tmp.fun_adm,tmp.fun_dist,tmp.uni_unidad,ds.dist_id,ds.dep_id,ds.dist_distrital,ds.dist_estado,ds.dist_tp,tmp.tp_adm,tmp.r_estado,tmp.sw_pass';
         $query = $this->db->query($sql);
         return $query->result_array();
     }

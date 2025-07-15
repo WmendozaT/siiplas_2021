@@ -8,12 +8,14 @@ class Cconfiguracion extends CI_Controller {
             if($this->rolfun($this->rol)){ 
               $this->load->library('pdf');
               $this->load->library('pdf2');
+              $this->load->library('encrypt');
               $this->load->model('Users_model','',true);
               $this->load->model('menu_modelo');
               $this->load->model('mantenimiento/model_configuracion');
               $this->load->model('mantenimiento/model_estructura_org');
               $this->load->model('programacion/model_proyecto');
               $this->load->model('reportes/mreporte_operaciones/mrep_operaciones');
+              $this->load->model('mantenimiento/model_funcionario');
               $this->load->library("security");
               $this->gestion = $this->session->userData('gestion');
               $this->adm = $this->session->userData('adm');
@@ -56,10 +58,6 @@ class Cconfiguracion extends CI_Controller {
       }
       
     }
-
-
-
-
 
 
     /*----- LISTA DE PERSONAL A EVALUAR ----*/
@@ -1113,6 +1111,69 @@ echo "post_max_size = 2000M";*/
           $this->db->update('configuracion', $update_conf);
 
           $this->session->set_userdata('conf_ajuste_poa', $estado);
+
+          echo "true";
+
+      }else{
+        show_404();
+      }
+    }
+
+
+    /*--- AJUSTE DE CREDENCIALES DE ACCESO ---*/
+    function valida_update_credenciales(){
+      if($this->input->is_ajax_request()){
+          $post = $this->input->post();
+          $estado = $post['estado'];
+          $g_id= $post['g_id'];
+
+          $update_conf = array(
+            'conf_psw' => $estado, //// ajuste poa
+            'fun_id' => $this->fun_id
+          );
+          $this->db->where('ide', $this->gestion);
+          $this->db->update('configuracion', $update_conf);
+
+
+          if($estado==1){ /// estado Activo, hay que desactualizar las credenciales de usuarios
+            $funcionarios=$this->model_funcionario->get_funcionarios($tp_usuario);
+            $combog = pg_query('UPDATE funcionario
+                      set sw_pass=0
+                      where fun_estado!=3 and cm_id=0 and fun_id!=399');
+
+              ///---------------- Actualizando Credenciales de Acceso
+              $seguimientopoa=$this->model_funcionario->get_funcionarios(1); ///  1 : Seguimiento POA
+              foreach($seguimientopoa as $row){
+                $password=$row['fun_usuario'].'/'.$row['dist_cod'].'-'.$this->gestion;
+                //echo $row['id'].'::::::'.$password.'---> '.$this->encrypt->encode($password).'<br>';
+                $update_adm = array(
+                  'fun_password' => $this->encrypt->encode($password),
+                  'sw_pass' => 1
+                );
+                $this->db->where('fun_id', $row['id']);
+                $this->db->update('funcionario', $update_adm);
+              }
+
+              $unidades=$this->model_estructura_org->get_unidades_regionales_consolidado(); /// Lista de Establecimientos de salud
+              foreach($unidades as $row){
+                $update_esalud = array(
+                  'clave' => $row['abrev'].''.$row['tipo'].'*'.$row['act_cod']
+                  );
+                $this->db->where('act_id', $row['act_id']);
+                $this->db->update('unidad_actividad', $update_esalud);
+              }
+          }
+
+
+          ///// Actualizando Credenciales para el Seguimiento POA
+          $funcionarios=$this->model_funcionario->get_funcionarios(1); ///  1 : Seguimiento POA
+
+
+
+
+
+
+          //$this->session->set_userdata('conf_psw', $estado);
 
           echo "true";
 
