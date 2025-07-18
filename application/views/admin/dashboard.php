@@ -68,6 +68,9 @@
         #mdialTamanio{
           width: 80% !important;
         }
+        #mdialTamanio_psw{
+          width: 40% !important;
+        }
         #mdialTamanio_saldos{
           width: 65% !important;
         }
@@ -332,6 +335,11 @@
               </div>
           </div>
       </div>
+
+
+    <!--  MODAL DE solicitudes     -->
+    <?php echo $solicitudes_pass; ?>
+    <!--  END MODAL  -->
 
     <!--  MODAL DE ALERTA CREDENCIALES     -->
     <?php echo $popup_credenciales; ?>

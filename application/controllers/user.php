@@ -177,6 +177,259 @@ class User extends CI_Controller{
             $data['cod_captcha']=$captcha;
             $data['captcha']=md5($captcha);
 
+
+            $tabla='
+            <style>
+                .caja {
+                font-family: sans-serif;
+                font-size: 28px;
+                font-weight: 100;
+                color: #000000;
+                background: #d1d9dc;
+                margin: 0 0 15px;
+                overflow: hidden;
+                padding: 3px;
+                }
+
+                #loading {
+                    display: none;
+                    position: fixed;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                    font-size: 24px;
+                    z-index: 1000;
+                }
+
+                #loadingpws {
+                    display: none;
+                    position: fixed;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                    font-size: 24px;
+                    z-index: 1000;
+                }
+
+                .modal {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.6);
+                }
+
+                .modal-content {
+                    background: white;
+                    width: 400px;
+                    margin: 50px auto;
+                    padding: 30px;
+                    text-align: center;
+                    border-radius: 8px;
+                }
+
+                .open-btn {
+                    background: #4CAF50;
+                    color: white;
+                    font-size: 16px;
+                }
+
+                .close-btn {
+                    background: #f44336;
+                    color: white;
+                }
+            </style>';
+            $tabla.='
+        <div id="kc-content-wrapper">
+        <input name="base" type="hidden" value="'.base_url().'">
+        <div class="background-siat-login overflow-hidden d-flex justify-content-center align-items-center" style="height: 100vh;">
+            <div class="container px-md-5 text-center text-lg-start my-5 ">
+                <div class="row gx-lg-5 align-items-center mb-sm-0">
+                    <div class="col-lg-6 mb-sm-0 mb-lg-0 text-center mt-lg-0" style="z-index: 10">
+                        <div class="imgSiat">
+                            <picture>
+                                <source srcset="'.base_url().'assets/login_nuevo/img/logo_CNS_header.png" media="(min-width: 992px)" width="200px" height="auto">
+                                <source srcset="'.base_url().'assets/login_nuevo/img/logo_CNS_header.png" media="(min-width: 768px)" width="200px" height="auto">
+                                <img class="img-fluid animateBolivia" src="'.base_url().'assets/login_nuevo/img/logo_CNS_header.png"alt="logoSiatBolivia" width="200px" height="auto">
+                            </picture>
+                            
+                            <h1 class="my-5 display-5 fw-bold ls-tight text-center titleSiat" style="color: hsl(218, 81%, 95%)">
+                                Sistema de Planificaci&oacute;n y Seguimiento al POA
+                                <br/>
+                                <span style="color: #FFFF">SIIPLAS v2.0</span>
+                            </h1>
+                            
+                            <div class="redesSocialesHeader">
+                                <a href="https://www.facebook.com/CNS.Bolivia/" target="_blank"><img class="rrss mx-2" src="'.base_url().'assets/login_nuevo/img/facebook.svg"/ alt="rrssFacebook"></a>
+                                <a href="https://www.instagram.com/cnsbolivia/" target="_blank"><img class="rrss mx-2" src="'.base_url().'assets/login_nuevo/img/instagram.svg"/ alt="rrssinstagram"></a>
+                                <a href="https://www.youtube.com/channel/UCH8i2IHse60iSiyeYAihomg" target="_blank"><img class="rrss mx-2" src="'.base_url().'assets/login_nuevo/img/youtube.svg"/ alt="rrssYoutube"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-lg-0 position-relative">
+                    <br/>
+                        <div class="card bg-card">
+                            <div class="card-body px-4 py-4 px-md-5">
+
+                                
+                                <div id="loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
+                                <form role="form" action="'.base_url().'index.php/admin/validate" method="post" id="form" class="login-form">
+                                    <input type="hidden" name="tp" id="tp" value="0">
+                                    <div align=center>
+                                        <b style="color:black;">DEPARTAMENTO NACIONAL DE PLANIFICACIÓN - C.N.S.</b>
+                                    </div>';
+                                        if($this->session->flashdata('success')){
+                                            $tabla.='
+                                                <div class="alert alert-success" role="alert">
+                                                <h4 class="alert-heading">Solicitud Enviada!</h4>
+                                                <p>'.$this->session->flashdata('success').'</p>
+                                                </div>';
+                                            
+                                            }
+                                            elseif($this->session->flashdata('danger')){
+                                                $tabla.='
+                                                <div class="alert alert-danger" role="alert">
+                                                <h4 class="alert-heading">Solicitud Enviada!</h4>
+                                                <p>'.$this->session->flashdata('danger').'</p>
+                                                </div>';
+                                            }
+                                    $tabla.='
+                                    <h5 class="text-center fw-bold my-4 titleBienvenido">Bienvenido/a!</h5>
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                        <div id="form-login-username" class="form-group">      
+                                            <input type="radio" name="radio-inline" id="radio0" checked="checked">
+                                            <i></i><b>Unidad Administrativa</b></label> &nbsp;&nbsp; 
+                                            <input type="radio" name="radio-inline" id="radio1">
+                                            <i></i><font color="#146f64"><b>Establecimiento de Salud</b></font></label>
+                                        </div>
+                                        </div>
+                                    </div>
+
+                                    <input id="deviceId" class="dOt" name="deviceId">
+
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <div class="form-floating mb-2">
+                                                <input tabindex="1" type="text" class="form-control form-input-bg" name="user_name" placeholder="USUARIO" minlength="5" maxlength="20" autocomplete="off" style="text-transform:uppercase;" oninput="this.value = this.value.toUpperCase();">
+                                                <label for="user_name">CLAVE DE ACCESO</label>
+                                                <div id="usu" class="text-danger text-start" style="font-size:9px;visibility: hidden;">
+                                                   <b> Este campo es requerido</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto pf-0">
+                                            <img src="'.base_url().'assets/login_nuevo/img/help.svg" class="tootip" title="USUARIO: Acceso asignado por el Departamento Nacional de Planificación"/>
+                                        </div>
+                                    </div>
+
+                                    <input id="deviceId" class="dOt" name="deviceId">
+
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <div class="form-floating mb-2">
+                                                <input tabindex="3" id="password" class="form-control form-input-bg" name="password" type="password" autocomplete="off" placeholder="CONTRASEÑA" minlength="6" maxlength="20"/>
+                                                <label for="password">PASSWORD</label>
+                                                <div id="pass" class="text-danger text-start" style="font-size:9px; visibility: hidden;" style="font-size:8px;">
+                                                  <b>  Este campo es requerido</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto pf-0">
+                                            <img src="'.base_url().'assets/login_nuevo/img/help.svg" class="tootip" title="La contraseña debe de tener (Mayúscula)"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center py-3">
+                                        <p class="caja" id="refreshs" style="text-align:center"><b>'.$data['cod_captcha'].'</b></p>
+                                        <input type="hidden" name="captcha" id="captcha"  value="'.$data['captcha'].'" style="text-transform:uppercase;" oninput="this.value = this.value.toUpperCase();">
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <input tabindex="4" id="dat_captcha" name="dat_captcha" type="text" class="form-control form-input-bg text-center" placeholder="Ingrese el texto de la imagen" autofocus minlength="4" maxlength="4" >
+                                        <div id="cat" class="text-danger text-start" style="font-size:9px; visibility: hidden;" style="font-size:8px;">
+                                            <b>  Este campo es requerido</b>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-grid gap-2 mt-2">
+                                        <input tabindex="4" class="btn btn-lg mdl-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="width: 100%;" name="login" id="kc-login" type="submit" value="INGRESAR"/>
+                                    </div>
+                                </form>
+                                <br>
+                                <a href="#" style="color:blue; font-size:11px;" onclick="show()">Olvidaste tu Contraseña?</a>
+
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+        </div>
+
+            <div id="modal" class="modal">
+                
+                <div class="modal-content">
+                <a href="#" onclick="hide()" align=right>Cerrar (x)</a>
+                <hr>
+                    <h2>RECUPERAR CONTRASEÑA</h2>
+                    <p>Registrar los siguientes campos.</p>
+
+                    <div id="loadingpws" ><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
+                    <form role="form" action="'.base_url().'index.php/validatepsw" method="post" id="formpws" class="login-form">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="form-floating mb-2">
+                                    <input tabindex="1" type="text" class="form-control form-input-bg" name="user_namepws" placeholder="USUARIO" minlength="5" maxlength="20" autocomplete="off" style="text-transform:uppercase;" oninput="this.value = this.value.toUpperCase();">
+                                    <label for="user_namepws">Usuario SIIPLAS</label>
+                                    <div id="usupsw" class="text-danger text-start" style="font-size:9px;visibility: hidden;">
+                                       <b> Este campo es requerido</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input id="deviceId" class="dOt" name="deviceId">
+
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="form-floating mb-2">
+                                    <input tabindex="3" id="emailpws" class="form-control form-input-bg" name="emailpws" type="text" autocomplete="off" placeholder="CORREO ELECTRONICO" minlength="6" maxlength="50"/>
+                                    <label for="emailpws">Correo Electronico</label>
+                                    <div id="email" class="text-danger text-start" style="font-size:9px; visibility: hidden;" style="font-size:8px;">
+                                      <b>  Este campo es requerido</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-2">
+                            <input tabindex="4" class="btn btn-lg mdl-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="width: 100%;" name="login" id="kc-login" type="submit" value="Enviar"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        
+        <script>
+            function show() {
+                document.getElementById("modal").style.display = "block";
+            }
+
+            function hide() {
+                document.getElementById("modal").style.display = "none";
+                window.location.reload();
+            }
+        </script>';
+
+
+            $data['formulario']=$tabla;
+
+
+
             $this->load->view('admin/login',$data);
         }
     }
@@ -242,6 +495,7 @@ class User extends CI_Controller{
             $data['list_trimestre']=$this->list_trimestre();
             $rol=$this->model_funcionario->get_rol($this->fun_id);
             $distritales=$this->model_proyecto->lista_distritales();
+
             
             $tabla='';
             $tabla.='
@@ -275,15 +529,68 @@ class User extends CI_Controller{
             $data['seguimiento_poa']='';
             $data['popup_saldos']='';
             $data['popup_credenciales']='';
+            $data['solicitudes_pass']='';
+
+
+            //// ------ SOLICITUDES DE PASSWORD
+            $solicitudes_password=$this->model_funcionario->listado_solicitud_contraseñas();
+
+            if(count($solicitudes_password)!=0 & $this->fun_id==399){
+                $data['solicitudes_pass']='
+                <input name="base" type="hidden" value="'.base_url().'">
+                    <div id="myModal" class="modal fade" data-backdrop="static" data-keyboard="false" style="">
+                        <div class="modal-dialog modal-login" id="mdialTamanio_psw">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 style="color:blue; text-align:center"><b>Atención de Solicitudes de Contraseña</b></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div style="color:blue; font-size:10px;">Tienes ('.count($solicitudes_password).') Solicitudes por atender..</div>
+                                    <table class="table table-bordered">
+                                    <thead>
+                                      <tr title="" >
+                                        <th scope="col" style="text-align:center;">#</th>
+                                        <th scope="col" style="text-align:center;">TRABAJADOR</th>
+                                        <th scope="col" style="text-align:center;">USUARIO</th>
+                                        <th scope="col" style="text-align:center;">DISTRITAL</th>
+                                        <th scope="col" style="text-align:center;">CORREO ELECTRONICO</th>
+                                        <th scope="col" style="text-align:center;"></th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>';
+                                    $nro=0;
+                                    foreach($solicitudes_password as $row){
+                                        $nro++;
+                                        $data['solicitudes_pass'].='
+                                        <tr>
+                                            <td>'.$nro.'</td>
+                                            <td>'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>
+                                            <td>'.$row['fun_usuario'].'</td>
+                                            <td>'.$row['dist_distrital'].'</td>
+                                            <td><b>'.$row['email'].'</b></td>
+                                            <td>
+                                                <a href="javascript:abreVentana(\''.site_url("").'/solpassw/'.$row['fun_id'].'\');" class="btn btn-default" title="GENERAR REPORTE"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>USUARIO</b></font></a>
+                                            </td>
+                                        </tr>';
+                                    }
+                                    $data['solicitudes_pass'].='
+                                    </tbody>
+                                    </table>                                  
+                                </div>
+                            </div>
+                        </div>
+                    </div>';
+            }
+
 
             //// ------ CREDENCIALES
-            if(($this->conf_credenciales==1 & $this->fun_credencial==0) & $this->fun_id!=399){
+            if(($this->conf_credenciales==1 || $this->fun_credencial==0) & $this->fun_id!=399){
                 $data['popup_credenciales']='
                     <div id="myModal" class="modal fade" data-backdrop="static" data-keyboard="false" style="">
                         <div class="modal-dialog modal-login" id="mdialTamanio_saldos">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 style="color:green; text-align:center"><b>Actualización de Credenciales de Acceso al SIIPLAS</b></h4>
+                                    <h4 style="color:green; text-align:center"><b>TIENE SOLOCOTUDES POR ATENDER</b></h4>
                                 </div>
                                 <div class="modal-body">
                                     <div class="alert alert-success" role="alert">
@@ -368,6 +675,42 @@ class User extends CI_Controller{
             redirect('/','refresh');
         }
     }
+
+
+    /*----- RESPUESTA A SOLICITUDES -----*/
+    public function respuesta_pass($fun_id){
+        $funcionario=$this->model_funcionario->get_funcionario($fun_id);
+        $historial=$this->model_funcionario->historial_contraseñas($fun_id);
+        $tabla='';
+
+        $tabla.='
+        <hr>
+        Buenas estimad@, le escribimos del <b>Departamento Nacional de Planificación</b>, en atención a solicitud de recuperacion de contraseña al Sistema Siiplas, le enviamos por este medio las credenciales de acceso.
+        <hr>
+        <div style="font-size:30px;"><b>CREDENCIALES DE ACCESO SIIPLAS</b></div><br>
+        <b>NOMBRE: </b>'.$funcionario[0]['fun_nombre'].' '.$funcionario[0]['fun_paterno'].' '.$funcionario[0]['fun_materno'].'<br>
+        <b>USUARIO: </b>'.$funcionario[0]['fun_usuario'].'<br>
+        <b>CONTRASEÑA: </b>'.$this->encrypt->decode($funcionario[0]['fun_password']).';
+        <hr>
+        Saludos Cordiales.
+        <br>
+        Atentamente: <b>Wilmer Mendoza Trujillo - ADMINISTRADOR SIIPLAS</b>
+        <br>
+        <br>
+        <br>
+        BOTON';
+
+
+        $update_psw = array(
+                'sol_estado' => 1
+              );
+              $this->db->where('fun_id', $fun_id);
+              $this->db->update('solicitudes_psw', $update_psw);
+
+
+        echo $tabla;
+    }
+
 
     /*----- VERIFICA SI EXISTE SALDO A DISTRBUIR (DASHBOARD) -----*/
     public function verif_saldos_disponibles_distrital($dep_id,$dist_id){
@@ -1004,6 +1347,52 @@ class User extends CI_Controller{
 
     function __encrip_password($password){
         return md5($password);
+    }
+
+    public function validate_credentials_psw(){
+      if ($this->input->post()) {
+          $post = $this->input->post();
+          $usuario = $this->security->xss_clean($post['user_namepws']); /// usuario
+          $email = $this->security->xss_clean($post['emailpws']); /// email
+
+            if (preg_match('/^[A-Za-z0-9.]+$/', $usuario) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $dominio = explode('@', $email)[1];
+                if (checkdnsrr($dominio, 'MX')) {
+                    $busca_responsable=$this->model_funcionario->fun_usuario($usuario);
+                    if(count($busca_responsable)!=0){
+                        $data_to_store = array( 
+                            'fun_id' => $busca_responsable[0]['fun_id'],
+                            'email' => $email,
+                            'sol_fecha' => date("d/m/Y H:i:s"),
+                            'num_ip' => $this->input->ip_address(), 
+                            'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+                          );
+                          $this->db->insert('solicitudes_psw', $data_to_store);
+                          $sol_id=$this->db->insert_id();
+
+                          if(count($this->model_funcionario->solicitud_contraseñas($sol_id))!=0){
+                            $this->session->set_flashdata('success','En unos minutos el Administrador del Sistema remitira su solicitud al correo electronico registrado !!!');
+                          }
+                          else{
+                            $this->session->set_flashdata('danger','Error al realizar la solicitud, contactese con el administrador !!!');
+                          }
+                    }
+                    else{
+                        $this->session->set_flashdata('danger','Usuario no valido !!!');
+                    }
+                    
+
+                } else {
+                    $this->session->set_flashdata('danger','ERROR !!!');
+                }
+
+                redirect('/','refresh');
+
+            }
+
+      } else {
+          show_404();
+      }
     }
 
 

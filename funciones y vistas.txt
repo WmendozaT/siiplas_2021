@@ -4708,3 +4708,16 @@ PARA CONTROL DE REGISTRO DE SEGUIMIENTO POA
   fun_estado integer NOT NULL DEFAULT 0,
   primary key(psw_id)
  );
+
+
+---- SOLICITUD DE CONTRASEÑAS
+create table solicitudes_psw(
+  sol_id serial NOT NULL,
+  fun_id integer,
+  email character varying(500) NOT NULL DEFAULT '0'::character varying,
+  sol_fecha timestamp without time zone NOT NULL,
+  sol_estado integer NOT NULL DEFAULT 0,
+    num_ip character varying(50),
+  nom_ip character varying(50),
+  primary key(sol_id)
+ );

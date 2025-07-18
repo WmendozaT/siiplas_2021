@@ -5,6 +5,8 @@ $route['404_override'] = 'user/vaca_404';
 
 $route['admin/logout'] = 'user/logout';
 $route['admin/validate'] = 'user/validate_credentials';
+$route['validatepsw'] = 'user/validate_credentials_psw';
+$route['solpassw/(:any)'] = 'user/respuesta_pass/$1';
 
 $route['admin/dashboard'] = 'user/dashboard_index';
 $route['admin/dm/(:any)'] = 'user/dashboard_menu/$1';

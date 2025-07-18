@@ -64,7 +64,7 @@
 
         function checkPasswordRequirements(password) {
             const requirements = {
-                length: password.length >= 8,
+                length: password.length >= 12,
                 uppercase: /[A-Z]/.test(password),
                 lowercase: /[a-z]/.test(password),
                 number: /[0-9]/.test(password),
@@ -72,7 +72,7 @@
             };
 
             // Actualizar visualización de requisitos
-            updateRequirement('lengthReq', requirements.length, '✓ Al menos 8 caracteres', '✗ Al menos 8 caracteres');
+            updateRequirement('lengthReq', requirements.length, '✓ Al menos 8 caracteres', '✗ Al menos 12 caracteres');
             updateRequirement('uppercaseReq', requirements.uppercase, '✓ Al menos una letra mayúscula', '✗ Al menos una letra mayúscula');
             updateRequirement('lowercaseReq', requirements.lowercase, '✓ Al menos una letra minúscula', '✗ Al menos una letra minúscula');
             updateRequirement('numberReq', requirements.number, '✓ Al menos un número', '✗ Al menos un número');

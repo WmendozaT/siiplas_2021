@@ -4,6 +4,7 @@ class Funcionario extends CI_Controller {
         parent::__construct();
         if($this->session->userdata('fun_id')!=null){
             $this->load->library('encrypt');
+            //$this->load->library('email');
             $this->load->model('Users_model','',true);
             $this->load->model('menu_modelo');
             $this->load->model('mantenimiento/model_funcionario');
@@ -521,7 +522,7 @@ class Funcionario extends CI_Controller {
                     'fun_materno' => strtoupper($this->input->post('am')),
                     'fun_cargo' => strtoupper($this->input->post('crgo')),
                     'fun_ci' => $this->input->post('ci'),
-                    'fun_domicilio' => strtoupper($this->input->post('domicilio')),
+                    'fun_domicilio' => $this->input->post('domicilio'),
                     'fun_telefono' => $this->input->post('fono'),
                     'fun_usuario' => $this->input->post('usuario'),
                     'fun_password' => $this->encrypt->encode($this->input->post('password')),
@@ -538,7 +539,7 @@ class Funcionario extends CI_Controller {
                 );
                 $this->db->insert('fun_rol', $data_to_store2);
 
-              
+
                 $this->session->set_flashdata('success','LOS DATOS DEL RESPONSABLE SE REGISTRARON CORRECTAMENTE');
                 redirect('admin/mnt/list_usu');
 
@@ -569,7 +570,7 @@ class Funcionario extends CI_Controller {
                 elseif($this->input->post('adm')==2){
                     $dist=$this->input->post('dist_id');
                 }
-         
+
                 $update_fun = array(
                     'uni_id' => $this->input->post('uni_id'),
                     'car_id' => 0,
@@ -578,7 +579,7 @@ class Funcionario extends CI_Controller {
                     'fun_materno' => strtoupper($this->input->post('am')),
                     'fun_cargo' => strtoupper($this->input->post('crgo')),
                     'fun_ci' => $this->input->post('ci'),
-                    'fun_domicilio' => strtoupper($this->input->post('domicilio')),
+                    'fun_domicilio' => $this->input->post('domicilio'),
                     'fun_telefono' => $this->input->post('fono'),
                     'fun_usuario' => $this->input->post('usuario'),
                     'fun_password' => $this->encrypt->encode($this->input->post('password')),
@@ -596,6 +597,16 @@ class Funcionario extends CI_Controller {
                     'r_id' => strtoupper($this->input->post('rol_id')),
                 );
                 $this->db->insert('fun_rol', $data_to_store2);
+
+                /*$this->load->library('email');
+                 $this->email->to($this->input->post('domicilio'));
+                $this->email->message("Usuario: ".$this->input->post('nombre')."\nContraseña: ".$this->input->post('password'));
+
+                if($this->email->send()) {
+            echo "Todo bien";
+            } else {
+                echo "algo mal";
+            }*/
 
 
                 $this->session->set_flashdata('success','EL RESPONSABLE SE MODIFICO CORRECTAMENTE');
@@ -984,37 +995,42 @@ class Funcionario extends CI_Controller {
 
                 $verifica = (($this->encrypt->decode($this->model_funcionario->verificar_password($this->fun_id))) == $apassword) ? true : false ;
                 if($verifica){
+                    $contraseñas_historial=$this->model_funcionario->historial_contraseñas($this->fun_id,$password); /// historial de contraseñas
+                    if(count($contraseñas_historial)==0){
+                        ///----- Historial
+                        $data_to_store = array( 
+                            'fun_id' => $this->fun_id,
+                            'fun_apassword' => $apassword,
+                        );
+                        $this->db->insert('historial_psw', $this->security->xss_clean($data_to_store));
+                        $fun_id=$this->db->insert_id();
 
-                    ///----- Historial
-                    $data_to_store = array( 
-                        'fun_id' => $this->fun_id,
-                        'fun_apassword' => $apassword,
-                    );
-                    $this->db->insert('historial_psw', $this->security->xss_clean($data_to_store));
-                    $fun_id=$this->db->insert_id();
+                        ///---- Update
+                        $update_fun = array(
+                            'fun_password' => $this->encrypt->encode($password),
+                            'sw_pass' => 1,
+                        );
+                        $this->db->where('fun_id', $this->fun_id);
+                        $this->db->update('funcionario', $this->security->xss_clean($update_fun));
 
-                    ///---- Update
-                    $update_fun = array(
-                        'fun_password' => $this->encrypt->encode($password),
-                        'sw_pass' => 1,
-                    );
-                    $this->db->where('fun_id', $this->fun_id);
-                    $this->db->update('funcionario', $this->security->xss_clean($update_fun));
-
-
-                    echo "
+                        echo "
+                            <script>
+                                alert('Se Cambio la Contraseña Correctamente');
+                            </script>";
+                        redirect('/','refresh');
+                    }
+                    else{
+                        echo "
                         <script>
-                            alert('Se Cambio la Contraseña Correctamente');
-                        </script>
-                    ";
-                    redirect('/','refresh');
+                            alert('Contraseña no valida, registre otra contraseña que no haya sido registrado con anterioridad en el Sistema.');
+                        </script>";
+                    }
                 }
                 else{
                     echo "
                         <script>
                             alert('La Contraseña Anterior No Coincide');
-                        </script>
-                    ";
+                        </script>";
                     $this->nueva_contra();
                 }
 
@@ -1029,7 +1045,7 @@ class Funcionario extends CI_Controller {
     }
 
 
-    function mod_cont(){
+/*    function mod_cont(){
         $fun_id = $this->input->post('fun_id');
         $apassword = $this->input->post('apassword');
         $password = $this->input->post('password');
@@ -1052,7 +1068,7 @@ class Funcionario extends CI_Controller {
             ";
             $this->nueva_contra();
         }
-    }
+    }*/
 
     /*---------- MENU -----------*/
     function menu($mod){

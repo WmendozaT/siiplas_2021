@@ -1157,7 +1157,7 @@ echo "post_max_size = 2000M";*/
               $unidades=$this->model_estructura_org->get_unidades_regionales_consolidado(); /// Lista de Establecimientos de salud
               foreach($unidades as $row){
                 $update_esalud = array(
-                  'clave' => $row['abrev'].''.$row['tipo'].'*'.$row['act_cod']
+                  'clave' => $row['abrev'].''.$row['tipo'].'*'.$row['act_cod'].'/'.$this->gestion
                   );
                 $this->db->where('act_id', $row['act_id']);
                 $this->db->update('unidad_actividad', $update_esalud);

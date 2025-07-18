@@ -44,6 +44,38 @@ class Model_funcionario extends CI_Model {
         return $query->result_array();
     }
 
+
+    /// Listado de solicitudes para Contraseñas
+    public function listado_solicitud_contraseñas(){
+        $sql = 'select sol.fun_id,sol.email,sol.sol_estado,fun.fun_usuario,fun.fun_nombre,fun.fun_paterno,fun.fun_materno,fun.fun_password,dist.dist_distrital
+                from solicitudes_psw sol
+                Inner Join funcionario as fun On fun.fun_id=sol.fun_id
+                Inner Join _distritales as dist On fun.fun_dist=dist.dist_id
+                where sol.sol_estado!=\'1\'
+                group by sol.fun_id,sol.email,sol.sol_estado,fun.fun_usuario,fun.fun_nombre,fun.fun_paterno,fun.fun_materno,fun.fun_password,dist.dist_distrital';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /// solicitudes para Contraseñas
+    public function solicitud_contraseñas($sol_id){
+        $sql = 'select *
+                from solicitudes_psw
+                where sol_id='.$sol_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /// historial de contraseñas
+    public function historial_contraseñas($fun_id){
+        $sql = 'select *
+                from historial_psw
+                where fun_id='.$fun_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     public function password_decod($pass)
     {
         $this->load->library('encrypt');
