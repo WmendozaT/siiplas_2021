@@ -4,7 +4,6 @@ class Funcionario extends CI_Controller {
         parent::__construct();
         if($this->session->userdata('fun_id')!=null){
             $this->load->library('encrypt');
-            //$this->load->library('email');
             $this->load->model('Users_model','',true);
             $this->load->model('menu_modelo');
             $this->load->model('mantenimiento/model_funcionario');
@@ -522,7 +521,7 @@ class Funcionario extends CI_Controller {
                     'fun_materno' => strtoupper($this->input->post('am')),
                     'fun_cargo' => strtoupper($this->input->post('crgo')),
                     'fun_ci' => $this->input->post('ci'),
-                    'fun_domicilio' => $this->input->post('domicilio'),
+                    'fun_domicilio' => strtoupper($this->input->post('domicilio')),
                     'fun_telefono' => $this->input->post('fono'),
                     'fun_usuario' => $this->input->post('usuario'),
                     'fun_password' => $this->encrypt->encode($this->input->post('password')),
@@ -539,7 +538,7 @@ class Funcionario extends CI_Controller {
                 );
                 $this->db->insert('fun_rol', $data_to_store2);
 
-
+              
                 $this->session->set_flashdata('success','LOS DATOS DEL RESPONSABLE SE REGISTRARON CORRECTAMENTE');
                 redirect('admin/mnt/list_usu');
 
@@ -570,7 +569,7 @@ class Funcionario extends CI_Controller {
                 elseif($this->input->post('adm')==2){
                     $dist=$this->input->post('dist_id');
                 }
-
+         
                 $update_fun = array(
                     'uni_id' => $this->input->post('uni_id'),
                     'car_id' => 0,
@@ -579,7 +578,7 @@ class Funcionario extends CI_Controller {
                     'fun_materno' => strtoupper($this->input->post('am')),
                     'fun_cargo' => strtoupper($this->input->post('crgo')),
                     'fun_ci' => $this->input->post('ci'),
-                    'fun_domicilio' => $this->input->post('domicilio'),
+                    'fun_domicilio' => strtoupper($this->input->post('domicilio')),
                     'fun_telefono' => $this->input->post('fono'),
                     'fun_usuario' => $this->input->post('usuario'),
                     'fun_password' => $this->encrypt->encode($this->input->post('password')),
@@ -597,16 +596,6 @@ class Funcionario extends CI_Controller {
                     'r_id' => strtoupper($this->input->post('rol_id')),
                 );
                 $this->db->insert('fun_rol', $data_to_store2);
-
-                /*$this->load->library('email');
-                 $this->email->to($this->input->post('domicilio'));
-                $this->email->message("Usuario: ".$this->input->post('nombre')."\nContraseña: ".$this->input->post('password'));
-
-                if($this->email->send()) {
-            echo "Todo bien";
-            } else {
-                echo "algo mal";
-            }*/
 
 
                 $this->session->set_flashdata('success','EL RESPONSABLE SE MODIFICO CORRECTAMENTE');
@@ -925,7 +914,7 @@ class Funcionario extends CI_Controller {
 
 <div class="form-container">
         <h2 class="form-title">CAMBIAR CREDENCIALES DE ACCESO</h2>
-        <form id="passwordForm" action="'.site_url().'/mantenimiento/funcionario/update_password" method="post">
+        <form id="passwordForm" action="'.site_url().'/mantenimiento/funcionario/update_password" method="post" accept-charset="UTF-8">
             <div class="form-group">
                 <label for="password_anterior" class="form-label">Contraseña Actual:</label>
                 <div class="password-container">
@@ -957,15 +946,15 @@ class Funcionario extends CI_Controller {
                     <input type="password" name="password_confirm" id="password_confirm" 
                            placeholder="Confirmar Contraseña Nueva" class="form-input" 
                            required autocomplete="new-password">
-                    <button type="button" class="toggle-password" onclick="togglePassword(\'password_confirm\')">
-                        <span id="toggleIcon3">👁️</span>
-                    </button>
+                            <button type="button" class="toggle-password" onclick="togglePassword(\'password_confirm\')">
+                                <span id="toggleIcon3">👁️</span>
+                            </button>
                 </div>
             </div>
 
             <div class="password-requirements">
                 <h4>Requisitos de contraseña Nueva:</h4>
-                <div id="lengthReq" class="requirement invalid">✗ Al menos 8 caracteres</div>
+                <div id="lengthReq" class="requirement invalid">✗ Al menos 12 caracteres</div>
                 <div id="uppercaseReq" class="requirement invalid">✗ Al menos una letra mayúscula</div>
                 <div id="lowercaseReq" class="requirement invalid">✗ Al menos una letra minúscula</div>
                 <div id="numberReq" class="requirement invalid">✗ Al menos un número</div>
@@ -977,6 +966,8 @@ class Funcionario extends CI_Controller {
             
             <div id="message" class="message" style="display: none;"></div>
         </form>
+        <br>
+        <a href="'.site_url("").'/admin/logout" style="color:red; font-size:11px;">Salir de la sesion</a>
     </div>';
 
         $this->load->view('admin/mod_contrase', $data);
@@ -991,46 +982,42 @@ class Funcionario extends CI_Controller {
 
             if ($this->form_validation->run()) {
                 $apassword = $this->security->sanitize_filename($this->input->post('pass'), TRUE); /// password anterior
-                $password = $this->security->sanitize_filename($this->input->post('password_confirm'), TRUE); /// password nuevo
+                $password = $this->input->post('password_confirm'); /// password nuevo
 
                 $verifica = (($this->encrypt->decode($this->model_funcionario->verificar_password($this->fun_id))) == $apassword) ? true : false ;
                 if($verifica){
-                    $contraseñas_historial=$this->model_funcionario->historial_contraseñas($this->fun_id,$password); /// historial de contraseñas
-                    if(count($contraseñas_historial)==0){
-                        ///----- Historial
-                        $data_to_store = array( 
-                            'fun_id' => $this->fun_id,
-                            'fun_apassword' => $apassword,
-                        );
-                        $this->db->insert('historial_psw', $this->security->xss_clean($data_to_store));
-                        $fun_id=$this->db->insert_id();
 
-                        ///---- Update
-                        $update_fun = array(
-                            'fun_password' => $this->encrypt->encode($password),
-                            'sw_pass' => 1,
-                        );
-                        $this->db->where('fun_id', $this->fun_id);
-                        $this->db->update('funcionario', $this->security->xss_clean($update_fun));
+                    ///----- Historial
+                    $data_to_store = array( 
+                        'fun_id' => $this->fun_id,
+                        'fun_apassword' => $apassword,
+                    );
+                    $this->db->insert('historial_psw', $this->security->xss_clean($data_to_store));
+                    $fun_id=$this->db->insert_id();
 
-                        echo "
-                            <script>
-                                alert('Se Cambio la Contraseña Correctamente');
-                            </script>";
-                        redirect('/','refresh');
-                    }
-                    else{
-                        echo "
+                    header('Content-Type: text/html; charset=UTF-8');
+                    ///---- Update
+                    $update_fun = array(
+                        'fun_password' => $this->encrypt->encode($password),
+                        'sw_pass' => 1,
+                    );
+                    $this->db->where('fun_id', $this->fun_id);
+                    $this->db->update('funcionario', $this->security->xss_clean($update_fun));
+
+
+                    echo "
                         <script>
-                            alert('Contraseña no valida, registre otra contraseña que no haya sido registrado con anterioridad en el Sistema.');
-                        </script>";
-                    }
+                            alert('Se Cambio la Contraseña Correctamente');
+                        </script>
+                    ";
+                    redirect('/','refresh');
                 }
                 else{
                     echo "
                         <script>
                             alert('La Contraseña Anterior No Coincide');
-                        </script>";
+                        </script>
+                    ";
                     $this->nueva_contra();
                 }
 
@@ -1045,7 +1032,7 @@ class Funcionario extends CI_Controller {
     }
 
 
-/*    function mod_cont(){
+    function mod_cont(){
         $fun_id = $this->input->post('fun_id');
         $apassword = $this->input->post('apassword');
         $password = $this->input->post('password');
@@ -1068,7 +1055,7 @@ class Funcionario extends CI_Controller {
             ";
             $this->nueva_contra();
         }
-    }*/
+    }
 
     /*---------- MENU -----------*/
     function menu($mod){

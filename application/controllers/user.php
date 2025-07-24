@@ -314,7 +314,7 @@ class User extends CI_Controller{
                                         <div class="col">
                                             <div class="form-floating mb-2">
                                                 <input tabindex="1" type="text" class="form-control form-input-bg" name="user_name" placeholder="USUARIO" minlength="5" maxlength="20" autocomplete="off" style="text-transform:uppercase;" oninput="this.value = this.value.toUpperCase();">
-                                                <label for="user_name">CLAVE DE ACCESO</label>
+                                                <label for="user_name">USUARIO SIIPLAS</label>
                                                 <div id="usu" class="text-danger text-start" style="font-size:9px;visibility: hidden;">
                                                    <b> Este campo es requerido</b>
                                                 </div>
@@ -338,7 +338,7 @@ class User extends CI_Controller{
                                             </div>
                                         </div>
                                         <div class="col-auto pf-0">
-                                            <img src="'.base_url().'assets/login_nuevo/img/help.svg" class="tootip" title="La contraseña debe de tener (Mayúscula)"/>
+                                            <img src="'.base_url().'assets/login_nuevo/img/help.svg" onclick="togglePassword(\'password\')" class="tootip" id="toggleIcon" title="CLAVE DE ACCESO: Acceso asignado por el Departamento Nacional de Planificación"/>
                                         </div>
                                     </div>
 
@@ -590,14 +590,25 @@ class User extends CI_Controller{
                         <div class="modal-dialog modal-login" id="mdialTamanio_saldos">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 style="color:green; text-align:center"><b>TIENE SOLOCOTUDES POR ATENDER</b></h4>
+                                    <h4 style="color:green; text-align:center"><b>ACTUALIZACIÓN DE CREDENCIALES DE ACCESO AL SIIPLAS.</b></h4>
                                 </div>
                                 <div class="modal-body">
                                     <div class="alert alert-success" role="alert">
                                         <p>Estimad@: <b>'.$this->session->userdata('funcionario').'</b>, para garantizar la seguridad de información, se implemento nuevas medidas de seguridad para proteger su cuenta de acceso al Sistema de Planificación <b>SIIPLAS.</b></p><br>
-                                        <p>Como parte de estas medidas es necesario que actualice su Contraseña. Esta acción es parte de nuestras politicas vigente en el <b>Plan de Seguridad de la Información PSI.</p>
+                                        <p>Como parte de estas medidas es necesario que actualice sus Credenciales de Acceso. Esta acción es parte de nuestras politicas vigente en el <b>Plan de Seguridad de la Información PISI.</p>
+                                        <hr>
+
+                                        <div style="font-size:15px;"><b>POLITICA DE GESTIÓN DE CONTRASEÑAS - Version 1.1</b></div>
+                                        <br>
+                                 
+                                      <ul>
+                                        <li>La contraseña debe estar compuesta por una combinación de letras mayúsculas,minúsculas, números y símbolos especiales como ser: “~ ! @ # $ % ^ & * ( ) _ + - = { } | [ ] \ : " ;  < > ? , . /</li>
+                                        <li>Toda contraseña de usuarios internos en servicios, sistemas y/o aplicaciones institucionales de la CNS, debe tener una longitud mínima de doce (12) caracteres alfanuméricos y símbolos especiales.</li>
+                                        <li>Se debe implementar un historial de contraseñas en todo sistema institucional de la CNS que haga uso de credenciales de acceso, en el que se guarden las contraseñas antiguas para que los usuarios no reutilicen las mismas.</li>
+                                      </ul>
+
                                     </div>
-                                   
+                                    
                                 </div>
                                 <div class="modal-footer">
                                 <a href="'.base_url().'index.php/admin/logout" class="btn btn-danger">Cerrar sesion</a>

@@ -9,6 +9,11 @@
         });
     })
 
+
+
+
+
+
     $(document).ready(function() {
         $('#form').on('submit', function(event) {
             event.preventDefault(); // Evitar el envío del formulario
@@ -128,3 +133,29 @@
           document.getElementById("but2").style.display = 'none';
           document.getElementById("load").style.display = 'block';
         });
+
+
+///---------------------------
+
+    function togglePassword(fieldId) {
+        const passwordInput = document.getElementById(fieldId);
+        let toggleIconId;
+
+         // Determinar el ID del icono basado en el campo
+        switch(fieldId) {
+            case 'password':
+                toggleIconId = 'toggleIcon';
+                break;
+        }
+        
+        const toggleIcon = document.getElementById(toggleIconId);
+        if (passwordInput && toggleIcon) {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                //toggleIcon.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                //toggleIcon.textContent = '👁️';
+            }
+        }
+    }
