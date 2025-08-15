@@ -251,14 +251,14 @@
             <th>PARTIDA</th>
             <th></th>
             <th>PPTO. ASIGNADO '.$this->gestion.' GASTO CORRIENTE</th>
-            <th>PPTO. ASIGNADO '.$this->gestion.' INVERSION</th>
+         
             <th>PPTO. PROG. POA '.$this->gestion.'</th>
             <th>PPTO. CERT. POA '.$this->gestion.'</th>
           </tr>
           </thead>
           <tbody>';
       foreach ($detalle as $row){
-        $par_asig_pi=$this->model_ptto_sigep->get_detalle_regional_distrital_consolidado_partidas_asignadas_nacional_pi($row['dep_id'],$row['dist_id'],$row['par_id']);
+        //$par_asig_pi=$this->model_ptto_sigep->get_detalle_regional_distrital_consolidado_partidas_asignadas_nacional_pi($row['dep_id'],$row['dist_id'],$row['par_id']);
         $part_prog=$this->model_insumo->get_partida_programado_certificado_regional_distrital($row['dep_id'],$row['dist_id'],$row['par_id']);
         $monto_prog=0;$monto_cert=0;
         if(count($part_prog)!=0){ /// gc
@@ -266,10 +266,10 @@
           $monto_cert=$part_prog[0]['ppto_certificado'];
         }
 
-        $ppto_asig_pi=0;
+        /*$ppto_asig_pi=0;
         if(count($par_asig_pi)!=0){
           $ppto_asig_pi=$par_asig_pi[0]['ppto_partida_asignado_gestion'];
-        }
+        }*/
         $tabla.='
         <tr>
           <td>'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
@@ -277,7 +277,7 @@
           <td style="text-align:center; font-size:11px">'.$row['partida'].'</td>
           <td>'.mb_convert_encoding($row['par_nombre'], 'cp1252', 'UTF-8').'</td>
           <td align="right">'.round($row['ppto_partida_asignado_gestion'],2).'</td>
-          <td align="right">'.round($ppto_asig_pi,2).'</td>
+         
           <td align="right">'.round($monto_prog,2).'</td>
           <td align="right">'.round($monto_cert,2).'</td>
         </tr>';
@@ -294,7 +294,7 @@
       header("Pragma: no-cache");
       header("Expires: 0");
       echo "";
-      ini_set('max_execution_time', 0); 
+      ini_set('max_execution_time', 300); 
       ini_set('memory_limit','3072M');
       echo $tabla;
     }
@@ -432,14 +432,14 @@
         </tbody>
       </table>';
 
-      date_default_timezone_set('America/Lima');
+/*      date_default_timezone_set('America/Lima');
       $fecha = date("d-m-Y H:i:s");
       header('Content-type: application/vnd.ms-excel');
       header("Content-Disposition: attachment; filename=CONSOLIDADO_PARTIDAS_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante
       header("Pragma: no-cache");
       header("Expires: 0");
       ini_set('max_execution_time', 0); 
-      ini_set('memory_limit','3072M');
+      ini_set('memory_limit','3072M');*/
       echo $tabla;
     }
 

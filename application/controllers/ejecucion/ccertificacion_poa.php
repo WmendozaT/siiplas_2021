@@ -1281,7 +1281,7 @@ class Ccertificacion_poa extends CI_Controller {
           $data['pie_reporte']='Certificacion_Poa_Aprobado '.$data['solicitud'][0]['tipo_subactividad'].' '.$data['solicitud'][0]['serv_descripcion'].' '.$data['solicitud'][0]['abrev'];
         }
 
-        /*echo $data['items_certificados_final'];
+      /*  echo $data['items_certificados_final'];
         echo '<br>';
         echo $data['items_modificados'];
         echo '<br>';

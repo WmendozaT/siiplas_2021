@@ -162,7 +162,7 @@
                                                         </section>
                                                         <section class="col col-3">
                                                             <label class="label"><font color="blue">PASSWORD</font></label>
-                                                            <input class="form-control" type="text" name="password" id="password" placeholder="Password" value="<?php echo $edit_pass ?>" maxlength="20">
+                                                            <input class="form-control" type="text" name="password" id="password" placeholder="Password" value="<?php echo $edit_pass ?>" maxlength="50">
                                                         </section>
                                                     </div>    
                                                 </div><br>

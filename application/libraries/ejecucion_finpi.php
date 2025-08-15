@@ -2032,9 +2032,11 @@ class ejecucion_finpi extends CI_Controller{
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td align=right>'.number_format($detalle_modificacion_pi[1], 2, ',', '.').'</td>
-            <td align=right>'.number_format($detalle_modificacion_pi[2], 2, ',', '.').'</td>
+          <tr>';
+
+         /*   <td align=right>'.number_format($detalle_modificacion_pi[1], 2, ',', '.').'</td>
+            <td align=right>'.number_format($detalle_modificacion_pi[2], 2, ',', '.').'</td>*/
+          $tabla.='
             <td align=right>'.number_format($detalle_modificacion_pi[3], 2, ',', '.').'</td>';
             for ($i=0; $i <=12 ; $i++) { 
               $tabla.='<td align=right>'.number_format($ppto_pi[$i], 2, ',', '.').'</td>';

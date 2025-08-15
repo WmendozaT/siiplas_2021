@@ -330,7 +330,7 @@ class User extends CI_Controller{
                                     <div class="row align-items-center">
                                         <div class="col">
                                             <div class="form-floating mb-2">
-                                                <input tabindex="3" id="password" class="form-control form-input-bg" name="password" type="password" autocomplete="off" placeholder="CONTRASEÑA" minlength="6" maxlength="20"/>
+                                                <input tabindex="3" id="password" class="form-control form-input-bg" name="password" type="password" autocomplete="off" placeholder="CONTRASEÑA" minlength="6" maxlength="50"/>
                                                 <label for="password">PASSWORD</label>
                                                 <div id="pass" class="text-danger text-start" style="font-size:9px; visibility: hidden;" style="font-size:8px;">
                                                   <b>  Este campo es requerido</b>
@@ -1412,15 +1412,17 @@ class User extends CI_Controller{
 
         $this->load->model('Users_model');
         if(isset($_POST['user_name']) && isset($_POST['password']) && isset($_POST['dat_captcha'])){
-            if($this->input->post('user_name') && preg_match('/^[a-zA-Z0-9!@+,:?_.^\/\*&%$]*$/i', $this->input->post('password')) && preg_match('/^[A-Z0-9\/]*$/i', $this->input->post('dat_captcha'))){
+
+            if($this->input->post('user_name') && preg_match('/^[a-zA-Z0-9!@+,:?_.^\/\*&%$-]*$/i', $this->input->post('password')) && preg_match('/^[A-Z0-9\/]*$/i', $this->input->post('dat_captcha'))){
                 
                 if(md5($this->input->post('dat_captcha'))==$this->input->post('captcha')){
                     $user_name = $this->security->sanitize_filename(strtoupper(htmlspecialchars($this->input->post('user_name'))), TRUE) ;
-                    $password = $this->security->sanitize_filename($this->input->post('password'), TRUE); 
+                    $password = $this->input->post('password'); 
                  
                     if($this->input->post('tp')==0){ /// Administrador
                         
                         $is_valid = $this->model_funcionario->verificar_loggin($this->security->xss_clean($user_name), $this->security->xss_clean($password));
+                        echo $is_valid['bool'];
                         if($is_valid['bool']){
                             $this->session->set_userdata($this->session_administrador($is_valid['fun_id'])); /// Sesion Administrador
                             
@@ -1469,7 +1471,7 @@ class User extends CI_Controller{
             }
             else{
                 $this->session->sess_destroy();
-                $this->session->set_flashdata('danger','DATOS NO VALIDOS !!');
+                $this->session->set_flashdata('danger','DATOS NO VALIDOS !!!!!');
                 redirect('default_controller', 'refresh');
             }
             
