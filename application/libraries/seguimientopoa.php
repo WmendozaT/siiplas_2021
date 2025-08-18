@@ -2242,6 +2242,112 @@ class Seguimientopoa extends CI_Controller{
 
 
 
+    ///// PARA LA NOTIFICACION POA solo ACTIVIDADES
+    public function lista_subactividades_a_notificar_actividades($subactividades){
+      $tabla='';
+      $nro_pag=0;
+      $tabla.='
+                <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:99%;" align=center>
+                    <thead>
+                      <tr style="font-size: 7px;" bgcolor=#f8f2f2 align=center>
+                        <th style="width:10%; height:18px;">UNIDAD OPERATIVA</th>
+
+                        <th style="width:3%;"><b>COD. OPE.</b></th>
+                        <th style="width:3%;"><b>COD. ACT.</b></th>
+                        <th style="width:39%;">ACTIVIDAD</th>
+                        <th style="width:20%;">INDICADOR</th>
+                        <th style="width:25%;">MEDIO DE VERIFICACI&Oacute;N</th>
+                        <th style="width:5%;">PROG. '.$this->verif_mes[2].'</th>
+                        <th style="width:5%;">EJEC. PENDIENTE</th>
+                      </tr>
+                    </thead>
+                    <tbody>';
+      foreach($subactividades as $rowu){ 
+        $nro_pag++; 
+        $tabla.=$this->get_notificacion_solo_actividades($rowu['com_id']); //// Get Notificacion por Unidad Responsable
+      }
+
+      $tabla.= '
+                 </tbody>
+               </table>';
+      return $tabla;
+    }
+
+    //// NOTIFICACION DE LA UNIDAD RESPONSABLE
+    public function get_notificacion_solo_actividades($com_id){
+      $componente=$this->model_componente->get_componente($com_id,$this->gestion);
+      $mes = $this->mes_nombre();
+      $titulo1=strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_descripcion']).' - '.$componente[0]['abrev'];
+      $tabla='';
+      
+
+        /// Formulario N 4
+        if($componente[0]['tp_id']==4){
+
+            $form4=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE ACTIVIDADES
+            
+                  if(count($form4)!=0 & $componente[0]['tp_id']==4){ /// 
+                    $nro=0;
+                    foreach ($form4 as $row) {
+                      $diferencia=$this->verif_valor_no_ejecutado($row['prod_id'],$this->verif_mes[1],$row['mt_id']);
+                      $indi_id='';
+                       if($row['indi_id']==2){
+                         $indi_id='%';
+                       }
+                      if($diferencia[1]!=0 || $diferencia[2]!=0){
+                        $nro++;
+                        $tabla.= '
+                          <tr>
+                            <td style="height:12px; width:10%;">'.$titulo1.'</td>
+                            <td align=center style="font-size: 12px; width:3%;"><b>'.$row['or_codigo'].'</b></td>
+                            <td align=center style="font-size: 12px; width:3%;"><b>'.$row['prod_cod'].'</b></td>
+                            <td style="width:39%;">'.$row['prod_producto'].'</td>
+                            <td style="width:20%;">'.$row['prod_indicador'].'</td>
+                            <td style="width:25%;">'.$row['prod_fuente_verificacion'].'</td>
+                            
+                            <td align=center bgcolor="#f6fbf4">'.$diferencia[2].' '.$indi_id.'</td>
+                            <td align=center bgcolor="#f7e1e2">';
+                            if($row['mt_id']==3){
+                              $tabla.=$diferencia[1];
+                            }
+                            $tabla.='
+                            </td>
+                          </tr>';
+                      }
+                    }
+                  }
+                  else{
+                    $tabla.='<tr>
+                              <td colspan=8><div align=center>-------------- SIN ACTIVIDADES PROGRAMADAS --------------</div></td>
+                            </tr>';
+                  }
+
+                
+        }
+        else{
+          $tabla.='
+          <table border=0 style="width:99%;" align=center>  
+                 <tr>
+                    <td style="width:98%;text-align: justify;">
+                     El Departamento Nacional de Planificaci&oacute;n en el marco de sus competencias viene fortaleciendo las tareas de monitoreo y supervisi&oacute;n 
+                     a traves del Sistema de Planificaci&oacute;n <b>SIIPLAS</b>, en este sentido recordamos a usted efectuar el seguimiento al cumplimiento del POA <b>'.$this->verif_mes[2].'</b> '.$this->session->userdata('gestion').', de 
+                     <b>'.$titulo2.'</b> a su cargo, haciendo enfasis en la programaci&oacute;n mensual y periodo de ejecuci&oacute;n de cada operaci&oacute;n.
+                    </td>
+                 </tr>
+               </table>';
+        }
+
+        //// ---- REQUERIMIENTOS
+    $tabla.='
+        </page>';
+
+      return $tabla;
+    }
+
+
+
+    ////==============================
+
     ///// PARA LA NOTIFICACION POA POR PROYECTO
     public function lista_subactividades_a_notificar($subactividades){
       $tabla='';
@@ -2412,93 +2518,6 @@ class Seguimientopoa extends CI_Controller{
                  </tr>
                </table>';
         }
-        // else{ /// notificacion anterior
-
-        //     $form4=$this->model_seguimientopoa->operaciones_programados_x_mes($com_id,$this->verif_mes[1]); /// lISTA DE FORMULARIO 4 PROGRAMADO AL MES
-        //     if(count($form4)!=0 & $proyecto[0]['tp_id']==4){
-        //       $tabla.='
-        //       <table border=0 style="width:99%;" align=center>  
-        //         <tr>
-        //             <td style="width:98%;text-align: justify;">
-        //             El Departamento Nacional de Planificaci&oacute;n en el marco de sus competencias viene fortaleciendo las tareas de monitoreo y supervisi&oacute;n 
-        //             a traves del Sistema de Planificaci&oacute;n <b>SIIPLAS</b>, en este sentido recordamos a usted efectuar el seguimiento al cumplimiento del POA <b>'.$this->verif_mes[2].'</b> '.$this->session->userdata('gestion').', de 
-        //             <b>'.$titulo2.'</b> a su cargo, haciendo enfasis en la programaci&oacute;n mensual y periodo de ejecuci&oacute;n de cada operaci&oacute;n.
-        //             </td>
-        //         </tr>
-        //       </table>
-        //       <br>';
-
-        //         $tabla.='
-        //         <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:99%;" align=center>
-        //             <thead>
-        //               <tr style="font-size: 7px;" bgcolor=#f8f2f2 align=center>
-        //                 <th style="width:2%; height:18px;"></th>
-        //                 <th style="width:3%;"><b>COD. OPE.</b></th>
-        //                 <th style="width:3%;"><b>COD. ACT.</b></th>
-        //                 <th style="width:39%;">ACTIVIDAD</th>
-        //                 <th style="width:20%;">INDICADOR</th>
-        //                 <th style="width:25%;">MEDIO DE VERIFICACI&Oacute;N</th>
-        //                 <th style="width:5%;">PROG. '.$this->verif_mes[2].'</th>
-        //               </tr>
-        //             </thead>
-        //             <tbody>';
-        //             $nro_ope=0;
-        //             foreach ($form4 as $row) {
-        //               $indi_id='';
-        //               /*if($row['indi_id']==2){
-        //                 $indi_id='%';
-        //               }*/
-        //               $nro_ope++;
-        //               $tabla.= '
-        //                 <tr>
-        //                   <td align=center style="height:12px; width:2%;">'.$nro_ope.'</td>
-        //                   <td align=center style="font-size: 12px; width:3%;"><b>'.$row['or_codigo'].'</b></td>
-        //                   <td align=center style="font-size: 12px; width:3%;"><b>'.$row['prod_cod'].'</b></td>
-        //                   <td style="width:39%;">'.$row['prod_producto'].'</td>
-        //                   <td style="width:20%;">'.$row['prod_indicador'].'</td>
-        //                   <td style="width:25%;">'.$row['prod_fuente_verificacion'].'</td>
-        //                   <td style="width:5%;font-size: 10px; text-align:center"><b>'.round($row['pg_fis'],2).' '.$indi_id.'</b></td>
-        //                 </tr>';
-        //             }
-        //         $tabla.= '
-        //             </tbody>
-        //           </table>
-        //           ';
-        //     }
-        //     else{ /// cuando no hay actividades programadas
-                
-        //         if($proyecto[0]['tp_id']==1){ /// Proyectos de Inversion
-        //           $tabla.='
-        //           <table border=0 style="width:99%;" align=center>  
-        //             <tr>
-        //                 <td style="width:98%;text-align: justify;">
-        //                   El Departamento Nacional de Planificaci&oacute;n en el marco de sus competencias viene fortaleciendo las tareas de monitoreo y supervisi&oacute;n 
-        //                   a traves del Sistema de Planificaci&oacute;n <b>SIIPLAS</b>, en este sentido recordamos a usted efectuar las gestiones para la ejecuci&oacute;n del proyecto: <b>'.$proyecto[0]['proy_nombre'].'</b>, para el mes de 
-        //                   <b>'.$this->verif_mes[2].' '.$this->gestion.'</b>, de acuerdo a la programación inicial, recordar que para fines de control y gestión por resultados la 
-        //                   responsabilidad del cumplimiento corresponde a su autoridad.
-        //                 </td>
-        //             </tr>
-        //           </table>
-        //           <br>';
-        //         }
-        //         else{ /// Gasto Corriente
-        //           $tabla.='
-        //           <table border=0 style="width:99%;" align=center>  
-        //             <tr>
-        //                 <td style="width:98%;text-align: justify;">
-        //                 El Departamento Nacional de Planificaci&oacute;n en el marco de sus competencias viene fortaleciendo las tareas de monitoreo y supervisi&oacute;n 
-        //                 a traves del Sistema de Planificaci&oacute;n <b>SIIPLAS</b>, en este sentido recordamos a usted efectuar las gestiones en el plazo programado para la ejecuci&oacute;n de la Solicitud de CERTIFICACIÓN POA
-        //                 <b>'.$this->verif_mes[2].' '.$this->gestion.'</b>. Recordar que para fines de control y gestión por resultados la 
-        //                 responsabilidad del cumplimiento corresponde a su autoridad.
-        //                 </td>
-        //             </tr>
-        //           </table>
-        //           <br>
-        //           <div align=center>-------------- SIN ACTIVIDADES PROGRAMADAS --------------</div>';
-        //         }
-        //     }
-
-        // }
 
         //// ---- REQUERIMIENTOS
         $sw=0;

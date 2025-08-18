@@ -1988,20 +1988,93 @@ class Cseguimiento extends CI_Controller {
     if(count($data['proyecto'])!=0){
       //$unidades_responsables=$this->model_seguimientopoa->get_lista_subactividades_operaciones_programados($data['proyecto'][0]['dist_id'],$this->verif_mes[1],$this->gestion,$proy_id);
       $unidades_responsables=$this->model_componente->lista_subactividad($proy_id);
-      $data['verif_mes']=$this->verif_mes;
+      //$data['verif_mes']=$this->verif_mes;
       $data['principal']='';
       if($data['proyecto'][0]['tp_id']==4){
         $data['principal']=$this->seguimientopoa->cuerpo_nota_notificacion($proy_id); /// Cuerpo Nota Principal
       }
-      $data['cuerpo']=$this->seguimientopoa->lista_subactividades_a_notificar($unidades_responsables); /// listado de unidades a notificar
+      
+      $tabla='';
+       $tabla.='
+        <page orientation="portrait" backtop="50mm" backbottom="10mm" backleft="5mm" backright="5mm" pagegroup="new">
+            <page_header>
+                <br><div class="verde"></div>
+                 
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                    <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
+                      <td width=20%; text-align:center;"">
+                      </td>
+                      <td width=60%; align=left>
+                        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                          <tr>
+                            <td style="width:100%; height: 1.2%; font-size: 50px; font-family: Arial;" align="center"><b>'.$this->session->userdata('entidad').'</b></td>
+                          </tr>
+                          <tr>
+                            <td style="width:100%; height: 1.2%; font-size: 25px; font-family: Arial;" align="center">DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                          </tr>
+                        </table>
+                      </td>
+                      <td width=20%; align=left style="font-size: 8px;">
+                      </td>
+                    </tr>
+                  </table>
+                  <hr style="border:2px;">
+                
+            </page_header>
+            <page_footer>
+            <hr>
+            <div style="width:100%; height: 1.2%; font-size: 9px; font-family: Arial;">&nbsp;&nbsp;&nbsp;<b>SISTEMA DE PLANIFICACIÓN DE SALUD - SIIPLAS @Wmendoza7</b><br><br></div>
+            </page_footer>
+
+            '.$this->seguimientopoa->lista_subactividades_a_notificar_actividades($unidades_responsables).'
+
+            ';
+                
+        $tabla.='
+        </page>';
+
+
+
+
+
+
+
+
+      //$data['cuerpo']=$this->seguimientopoa->lista_subactividades_a_notificar($unidades_responsables); /// listado de unidades a notificar
+      //$data['cuerpo']=$this->seguimientopoa->lista_subactividades_a_notificar_actividades($unidades_responsables); /// listado de unidades a notificar
+      $data['cuerpo']=$tabla;
+      echo $data['cuerpo'];
       //echo $data['proyecto'][0]['dist_id'];
-      $this->load->view('admin/evaluacion/seguimiento_poa/reporte_notificacion_seguimiento', $data); 
+      //$this->load->view('admin/evaluacion/seguimiento_poa/reporte_notificacion_seguimiento', $data); 
     }
     else{
       echo "Error !!!";
     }
   }
 
+
+
+  /*----- REPORTE NOTIFICACION POA MENSUAL POR GASTO CORRIENTE 2021-2022-2023 POR UNIDAD -----*/
+  public function reporte_notificacion_operaciones_mensual2($proy_id){
+    $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// PROYECTO
+    if(count($data['proyecto'])!=0){
+      //$unidades_responsables=$this->model_seguimientopoa->get_lista_subactividades_operaciones_programados($data['proyecto'][0]['dist_id'],$this->verif_mes[1],$this->gestion,$proy_id);
+      $unidades_responsables=$this->model_componente->lista_subactividad($proy_id);
+      $data['verif_mes']=$this->verif_mes;
+      $data['principal']='';
+      if($data['proyecto'][0]['tp_id']==4){
+        $data['principal']=$this->seguimientopoa->cuerpo_nota_notificacion($proy_id); /// Cuerpo Nota Principal
+      }
+      $data['cuerpo']=$this->seguimientopoa->lista_subactividades_a_notificar($unidades_responsables); /// listado de unidades a notificar
+   //   $data['cuerpo']=$this->seguimientopoa->lista_subactividades_a_notificar_actividades($unidades_responsables); /// listado de unidades a notificar
+      echo $data['cuerpo'];
+      //echo $data['proyecto'][0]['dist_id'];
+      //$this->load->view('admin/evaluacion/seguimiento_poa/reporte_notificacion_seguimiento', $data); 
+    }
+    else{
+      echo "Error !!!";
+    }
+  }
   
   /*----- REPORTE NOTIFICACION POA MENSUAL POR GASTO CORRIENTE POR COMPONENTE -----*/
   public function reporte_notificacion_poa_mensual_componente($com_id){
