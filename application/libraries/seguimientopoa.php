@@ -2242,34 +2242,35 @@ class Seguimientopoa extends CI_Controller{
 
 
 
-    ///// PARA LA NOTIFICACION POA solo ACTIVIDADES
+    ///// PARA LA NOTIFICACION 2 POA solo ACTIVIDADES
     public function lista_subactividades_a_notificar_actividades($subactividades){
       $tabla='';
       $nro_pag=0;
       $tabla.='
-                <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:99%;" align=center>
-                    <thead>
-                      <tr style="font-size: 7px;" bgcolor=#f8f2f2 align=center>
-                        <th style="width:10%; height:18px;">UNIDAD OPERATIVA</th>
-
-                        <th style="width:3%;"><b>COD. OPE.</b></th>
-                        <th style="width:3%;"><b>COD. ACT.</b></th>
-                        <th style="width:39%;">ACTIVIDAD</th>
-                        <th style="width:20%;">INDICADOR</th>
-                        <th style="width:25%;">MEDIO DE VERIFICACI&Oacute;N</th>
-                        <th style="width:5%;">PROG. '.$this->verif_mes[2].'</th>
-                        <th style="width:5%;">EJEC. PENDIENTE</th>
-                      </tr>
-                    </thead>
-                    <tbody>';
-      foreach($subactividades as $rowu){ 
-        $nro_pag++; 
-        $tabla.=$this->get_notificacion_solo_actividades($rowu['com_id']); //// Get Notificacion por Unidad Responsable
-      }
+        <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:99%;" align=center>
+          <thead>
+            <tr style="font-size: 7px;" bgcolor=#f8f2f2 align=center>
+              <th style="width:1%; height:18px;">#</th>
+              <th style="width:10%; height:18px;">UNIDAD OPERATIVA</th>
+              <th style="width:3%;"><b>COD. OPE.</b></th>
+              <th style="width:3%;"><b>COD. ACT.</b></th>
+              <th style="width:39%;">ACTIVIDAD</th>
+              <th style="width:20%;">INDICADOR</th>
+              <th style="width:8%;">RESPONSABLE</th>
+              <th style="width:25%;">MEDIO DE VERIFICACI&Oacute;N</th>
+              <th style="width:5%;">PROG. '.$this->verif_mes[2].'</th>
+              <th style="width:5%;">EJEC. PENDIENTE</th>
+            </tr>
+          </thead>
+          <tbody>';
+          foreach($subactividades as $rowu){ 
+            $nro_pag++; 
+            $tabla.=$this->get_notificacion_solo_actividades($rowu['com_id']); //// Get Notificacion por Unidad Responsable
+          }
 
       $tabla.= '
-                 </tbody>
-               </table>';
+         </tbody>
+       </table>';
       return $tabla;
     }
 
@@ -2279,68 +2280,47 @@ class Seguimientopoa extends CI_Controller{
       $mes = $this->mes_nombre();
       $titulo1=strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_descripcion']).' - '.$componente[0]['abrev'];
       $tabla='';
-      
-
         /// Formulario N 4
-        if($componente[0]['tp_id']==4){
-
             $form4=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE ACTIVIDADES
             
-                  if(count($form4)!=0 & $componente[0]['tp_id']==4){ /// 
-                    $nro=0;
-                    foreach ($form4 as $row) {
-                      $diferencia=$this->verif_valor_no_ejecutado($row['prod_id'],$this->verif_mes[1],$row['mt_id']);
-                      $indi_id='';
-                       if($row['indi_id']==2){
-                         $indi_id='%';
-                       }
-                      if($diferencia[1]!=0 || $diferencia[2]!=0){
-                        $nro++;
-                        $tabla.= '
-                          <tr>
-                            <td style="height:12px; width:10%;">'.$titulo1.'</td>
-                            <td align=center style="font-size: 12px; width:3%;"><b>'.$row['or_codigo'].'</b></td>
-                            <td align=center style="font-size: 12px; width:3%;"><b>'.$row['prod_cod'].'</b></td>
-                            <td style="width:39%;">'.$row['prod_producto'].'</td>
-                            <td style="width:20%;">'.$row['prod_indicador'].'</td>
-                            <td style="width:25%;">'.$row['prod_fuente_verificacion'].'</td>
-                            
-                            <td align=center bgcolor="#f6fbf4">'.$diferencia[2].' '.$indi_id.'</td>
-                            <td align=center bgcolor="#f7e1e2">';
-                            if($row['mt_id']==3){
-                              $tabla.=$diferencia[1];
-                            }
-                            $tabla.='
-                            </td>
-                          </tr>';
+            if(count($form4)!=0 & $componente[0]['tp_id']==4){ /// 
+              $nro=0;
+              foreach ($form4 as $row) {
+                $diferencia=$this->verif_valor_no_ejecutado($row['prod_id'],$this->verif_mes[1],$row['mt_id']);
+                $indi_id='';
+                 if($row['indi_id']==2){
+                   $indi_id='%';
+                 }
+                if($diferencia[1]!=0 || $diferencia[2]!=0){
+                  $nro++;
+                  $tabla.= '
+                    <tr>
+                      <td style="height:12px; width:1%;">'.$nro.'</td>
+                      <td style="height:12px; width:10%;">'.$titulo1.'</td>
+                      <td align=center style="font-size: 12px; width:3%;"><b>'.$row['or_codigo'].'</b></td>
+                      <td align=center style="font-size: 12px; width:3%;"><b>'.$row['prod_cod'].'</b></td>
+                      <td style="width:39%;">'.$row['prod_producto'].'</td>
+                      <td style="width:20%;">'.$row['prod_indicador'].'</td>
+                      <td style="width:8%;">'.$row['prod_unidades'].'</td>
+                      <td style="width:25%;">'.$row['prod_fuente_verificacion'].'</td>
+                      
+                      <td align=center bgcolor="#f6fbf4">'.$diferencia[2].' '.$indi_id.'</td>
+                      <td align=center bgcolor="#f7e1e2">';
+                      if($row['mt_id']==3){
+                        $tabla.=$diferencia[1];
                       }
-                    }
-                  }
-                  else{
-                    $tabla.='<tr>
-                              <td colspan=8><div align=center>-------------- SIN ACTIVIDADES PROGRAMADAS --------------</div></td>
-                            </tr>';
-                  }
-
-                
-        }
-        else{
-          $tabla.='
-          <table border=0 style="width:99%;" align=center>  
-                 <tr>
-                    <td style="width:98%;text-align: justify;">
-                     El Departamento Nacional de Planificaci&oacute;n en el marco de sus competencias viene fortaleciendo las tareas de monitoreo y supervisi&oacute;n 
-                     a traves del Sistema de Planificaci&oacute;n <b>SIIPLAS</b>, en este sentido recordamos a usted efectuar el seguimiento al cumplimiento del POA <b>'.$this->verif_mes[2].'</b> '.$this->session->userdata('gestion').', de 
-                     <b>'.$titulo2.'</b> a su cargo, haciendo enfasis en la programaci&oacute;n mensual y periodo de ejecuci&oacute;n de cada operaci&oacute;n.
-                    </td>
-                 </tr>
-               </table>';
-        }
-
-        //// ---- REQUERIMIENTOS
-    $tabla.='
-        </page>';
-
+                      $tabla.='
+                      </td>
+                    </tr>';
+                }
+              }
+            }
+            else{
+              $tabla.='
+                <tr>
+                  <td colspan=10><div align=center>-------------- SIN ACTIVIDADES PROGRAMADAS --------------</div></td>
+                </tr>';
+            }
       return $tabla;
     }
 

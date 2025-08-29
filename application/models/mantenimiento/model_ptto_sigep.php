@@ -10,6 +10,20 @@ class Model_ptto_sigep extends CI_Model{
         $this->dist_tp = $this->session->userData('dist_tp');
     }
     
+
+    /// lista ppto asignado 
+    public function lista_ppto_asignado(){
+        $sql = '
+            select *
+            from ptto_partidas_sigep
+            where g_id='.$this->gestion.'
+            order by da,ue, aper_programa asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
     /// Get Proyecto
     public function get_proy($proy_id){
         $sql = '
@@ -281,7 +295,6 @@ class Model_ptto_sigep extends CI_Model{
                 where dep_cod=\''.$da.'\' and dist_cod=\''.$ue.'\' and prog=\''.$programa.'\' and act=\''.$actividad.'\'  ';
         }
         
-
         $query = $this->db->query($sql);
         return $query->result_array();
     }

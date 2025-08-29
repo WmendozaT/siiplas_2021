@@ -135,7 +135,8 @@ class Genera_informacion extends CI_Controller{
             <td>'.$nro.'</td>
             <td align=center>';
             if($row['pfec_estado']==1){
-              $tabla.=' <a href="'.site_url("").'/seg/notificacion_operaciones_mensual/'.$row['proy_id'].'" class="btn btn-default" target="_blank" title="NOTIFICACIÓN POA">NOTIFICACIÓN POA</a>';
+              $tabla.=' <a href="'.site_url("").'/seg/notificacion_operaciones_mensual/'.$row['proy_id'].'" class="btn btn-default" target="_blank" title="NOTIFICACIÓN POA">NOTIFICACIÓN POA</a><br>
+              <a href="'.site_url("").'/seg/notificacion_operaciones_mensual/'.$row['proy_id'].'" class="btn btn-default" target="_blank" title="NOTIFICACIÓN POA">NOTIFICACIÓN 2 POA</a>';
             }
             else{
               $tabla.='<b>FASE NO ACTIVA</b>';

@@ -239,7 +239,7 @@
                                         <label class="label"><b>SALDO A REVERTIR</b></label>
                                         <label class="input">
                                             <i class="icon-append fa fa-tag"></i>
-                                            <input class="form-control" type="text" name="saldo" id="saldo" value="0" onkeypress="return justNumbers(event);" onpaste="return false">
+                                            <input class="form-control" type="number" name="saldo" id="saldo" value="0" onkeypress="return justNumbers(event);" onpaste="return false">
                                         </label>
                                     </section>
                                 </div>
