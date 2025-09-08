@@ -383,7 +383,8 @@ class Creporte extends CI_Controller {
                     }
                     
                     $cabecera_f5=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$pr['com_id']);
-                    $requerimientos=$this->programacionpoa->list_requerimientos_reporte($this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']));
+                    $list_form5=$this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']);
+                    $requerimientos=$this->programacionpoa->list_requerimientos_reporte($list_form5);
                     
                     $lista_partidas=$this->model_insumo->list_consolidado_partidas_componentes($pr['com_id']);
                     $partidas=$this->consolidado_partida_reporte($lista_partidas,$proyecto[0]['tp_id']);
@@ -399,7 +400,7 @@ class Creporte extends CI_Controller {
                         </page_footer>
                         '.$formulario_N4.'
                     </page>';
-                   if(count($this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']))!=0){
+                   if(count($list_form5)!=0){
                         $tabla.='
                         <page backtop="75mm" backbottom="29mm" backleft="5mm" backright="5mm" pagegroup="new">
                             <page_header>

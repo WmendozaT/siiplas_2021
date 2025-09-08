@@ -221,6 +221,15 @@ class User extends CI_Controller{
                     background: rgba(0,0,0,0.6);
                 }
 
+                .modal2 {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 250%;
+                    height: 150%;
+                }
+
                 .modal-content {
                     background: white;
                     width: 400px;
@@ -228,6 +237,14 @@ class User extends CI_Controller{
                     padding: 30px;
                     text-align: center;
                     border-radius: 8px;
+                }
+
+                .modal-content2 {
+                    background: white;
+                    width: 600px;
+                    margin: 50px auto;
+                    padding: 30px;
+                    border-radius: 18px;
                 }
 
                 .open-btn {
@@ -246,6 +263,9 @@ class User extends CI_Controller{
         <input name="base" type="hidden" value="'.base_url().'">
         <div class="background-siat-login overflow-hidden d-flex justify-content-center align-items-center" style="height: 100vh;">
             <div class="container px-md-5 text-center text-lg-start my-5 ">
+            <div>
+              <a href="#" style="font-size:11px;color: hsl(150, 80%, 90%)" onclick="show2()"><b>ARCHIVOS ADJUNTOS</b></a>
+            </div>
                 <div class="row gx-lg-5 align-items-center mb-sm-0">
                     <div class="col-lg-6 mb-sm-0 mb-lg-0 text-center mt-lg-0" style="z-index: 10">
                         <div class="imgSiat">
@@ -360,7 +380,6 @@ class User extends CI_Controller{
                                 </form>
                                 <br>
                                 <a href="#" style="color:blue; font-size:11px;" onclick="show()">Olvidaste tu Contraseña?</a>
-
                             </div>
                         </div>
                     </div>
@@ -370,7 +389,6 @@ class User extends CI_Controller{
         </div>
 
             <div id="modal" class="modal">
-                
                 <div class="modal-content">
                 <a href="#" onclick="hide()" align=right>Cerrar (x)</a>
                 <hr>
@@ -412,11 +430,26 @@ class User extends CI_Controller{
                 </div>
             </div>
 
+            <div id="modal2" class="modal">
+                <div class="modal-content2">
+                <div style="text-align:right"><a href="#" onclick="hide()">Cerrar (x)</a></div>
+                
+                    <h2>LISTA DE ARCHIVOS</h2>
+                    <br>
+                    <ul class="custom-list" align=left>
+                        <li>📋 <a href="'.base_url().'assets/video/Resoluaciones_Directorio_MARZO_JUNIO_2025.xlsx" download  title="RESOLUCIONES DE DIRECTORIO">Matriz de Seguimiento a Resoluciones de Directorio</a></li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
         
         <script>
             function show() {
                 document.getElementById("modal").style.display = "block";
+            }
+            function show2() {
+                document.getElementById("modal2").style.display = "block";
             }
 
             function hide() {
@@ -425,10 +458,7 @@ class User extends CI_Controller{
             }
         </script>';
 
-
             $data['formulario']=$tabla;
-
-
 
             $this->load->view('admin/login',$data);
         }

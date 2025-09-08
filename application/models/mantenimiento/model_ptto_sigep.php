@@ -155,6 +155,23 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
+
+
+    /*------ Lista Consolidado detalle de Partidas (Asignadas) Institucional (Gasto Corriente o Proyecto de Inversion)-----*/
+    public function lista_detalle_consolidado_partidas_asignadas_nacional2(){
+        $sql = 'select poa.dep_departamento,poa.dist_distrital,poa.abrev,poa.da,poa.ue,poa.prog,poa.proy,poa.act,poa.aper_id,poa.proy_id,poa.proy_nombre,poa.tipo,poa.proy_sisin,poa.pfec_id,poa.tp_id,ppto.par_id,ppto.partida,ppto.ppto_inicial,ppto.importe,ppto.ppto_saldo_ncert
+                from lista_poa_nacional('.$this->gestion.') poa
+                Inner Join ptto_partidas_sigep as ppto On ppto.aper_id=poa.aper_id
+                order by poa.dep_cod,poa.da,poa.ue,poa.prog,poa.act asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
+
+
     /*------ Lista Consolidado detalle de Partidas (Asignadas) Por Unidad (Gasto Corriente / Proyecto de Inversion)-----*/
     public function lista_detalle_consolidado_partidas_asignadas_unidades($tp_id){
         $sql = 'select *

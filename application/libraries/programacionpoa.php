@@ -1583,7 +1583,7 @@ class Programacionpoa extends CI_Controller{
 
               }
 
-              ///------------------------------------------------------------------------
+              ///------------------------------------------------------------------------ bolsas
               $formularioN4=$this->model_producto->get_lista_form4_consolidado($com_id,1);
               foreach($formularioN4 as $rowp){
                 $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
