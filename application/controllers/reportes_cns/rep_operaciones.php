@@ -80,7 +80,7 @@ class Rep_operaciones extends CI_Controller {
           <div class="col-sm-2">
             <div class="well well-sm bg-color-teal txt-color-white text-center">
               <h5>CONSOLIDADO PPTO ASIGNADO.xls<br><b>PRESUPUESTO POA (Inicial)</b></h5>
-              <a href="'.site_url("").'/rep/exportar_detalle_partidas_asignadas_institucional" target=_blank title="DETALLE PARTIDA INSTITUCIONAL"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="30px" HEIGHT="30px"/></a>
+              <a href="'.base_url().'assets/video/TECHOS_ASIGNADOS_ANTEPROYECTO2026.xlsx" download target=_blank title="DETALLE PPTO POR PARTIDA INSTITUCIONAL"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="30px" HEIGHT="30px"/></a>
             </div>
           </div>
 

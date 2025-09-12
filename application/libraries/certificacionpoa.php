@@ -718,15 +718,16 @@ class Certificacionpoa extends CI_Controller{
           <table class="table table-bordered" style="width:80%;" align="center" id="datos">
             <thead >
               <tr style="text-align:center">
-                <th style="width:2%;"></th>
-                <th style="width:4%;">PARTIDA</th>
-                <th style="width:16%;">REQUERIMIENTO</th>
-                <th style="width:5%;">UNIDAD DE MEDIDA</th>
-                <th style="width:3%;">CANTIDAD</th>
-                <th style="width:5%;">PRECIO</th>
-                <th style="width:5%;">COSTO TOTAL</th>
-                <th style="width:5%;">MES PROGRAMADO</th>
-                <th style="width:10%;">OBSERVACION</th>
+                <th style="width:2%;text-align:center"></th>
+                <th style="width:4%;text-align:center">PARTIDA</th>
+                <th style="width:16%;text-align:center">REQUERIMIENTO</th>
+                <th style="width:5%;text-align:center">UNIDAD DE MEDIDA</th>
+                <th style="width:3%;text-align:center">CANTIDAD</th>
+                <th style="width:5%;text-align:center">PRECIO</th>
+                <th style="width:5%;text-align:center">COSTO TOTAL</th>
+                <th style="width:5%;text-align:center">MES PROGRAMADO</th>
+                <th style="width:10%;text-align:center">OBSERVACION</th>
+                <th style="width:5%;"></th>
               </tr>
             </thead>
             <tbody>';
@@ -737,6 +738,11 @@ class Certificacionpoa extends CI_Controller{
                 $color='';
                 if($temp[0]['m_id']<$this->verif_mes[1]){
                   $color='red';
+                }
+
+                $tp_reg='';
+                if($row['ins_tipo_modificacion']==1){
+                  $tp_reg='<b>REVERSIÓN</b>';
                 }
 
                 $nro++;
@@ -761,6 +767,7 @@ class Certificacionpoa extends CI_Controller{
                   <td style="width:5%; font-size: 12px; color:'.$color.'" align=left>'.$temp[0]['m_descripcion'].' : <b>'.number_format($temp[0]['ipm_fis'], 2, ',', '.').'</b></td>';
                   $tabla.='
                   <td style="width:8%; font-size: 12px;">'.$row['ins_observacion'].'</td>
+                  <td style="width:5%; font-size: 12px; color:green;">'.$tp_reg.'</td>
                 </tr>';
               }
             }
@@ -838,9 +845,13 @@ class Certificacionpoa extends CI_Controller{
           $temp=$this->model_certificacion->get_insumo_programado($row['ins_id']);
           if($temp==1){
             $nro++;
+            $tp_reg='';
+            if($row['ins_tipo_modificacion']==1){
+              $tp_reg='<b>REV.</b>';
+            }
             $tabla.='
             <tr title='.$row['ins_id'].' id="tr'.$nro.'" bgcolor="#EFF0EF">
-              <td style="width:2%;">';
+              <td style="width:2%; color:green;">';
               if(count($this->model_certificacion->get_items_solicitado($row['ins_id']))==0){ /// EN CASO DE QUENO TENGA SOLICITUD
                 $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="add_item_cpoa(this.value,'.$cpoa[0]['cpoa_id'].','.$nro.',this.checked);"/><br>';
               }
@@ -848,7 +859,8 @@ class Certificacionpoa extends CI_Controller{
                 $tabla.='<img src="'.base_url().'assets/Iconos/cancel.png" WIDTH="20" HEIGHT="20"/>';
               }
               $tabla.='
-              <input type="hidden" name="ins'.$row['ins_id'].'" id="ins'.$row['ins_id'].'" value="'.$row['ins_id'].'">
+              <input type="hidden" name="ins'.$row['ins_id'].'" id="ins'.$row['ins_id'].'" value="'.$row['ins_id'].'"><br>
+              '.$tp_reg.'
               </td>
               <td style="width:4%; font-size: 17px;" align=center><b>'.$row['par_codigo'].'</b></td>
               <td style="width:16%; font-size: 12px;" >'.$row['ins_detalle'].'</td>

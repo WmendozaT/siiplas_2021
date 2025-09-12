@@ -329,8 +329,8 @@ class Ccertificacion_poa extends CI_Controller {
   //// redirecciona a la vista para Certificacion POA
   public function lista_requerimientos_cpoa($cpoa_id){
     if($this->fun_id==399 || $this->fun_id==401){
-      //$this->lista_requerimientos_cpoa2($cpoa_id); //// Generacion normal de Certificacion POA
-      $this->lista_requerimientos_cpoa_cert_rapida($cpoa_id); //// manera rapida
+      $this->lista_requerimientos_cpoa2($cpoa_id); //// Generacion normal de Certificacion POA
+     // $this->lista_requerimientos_cpoa_cert_rapida($cpoa_id); //// manera rapida
     }
     else{
       $this->lista_requerimientos_cpoa2($cpoa_id); //// Generacion normal de Certificacion POA
@@ -1206,7 +1206,9 @@ class Ccertificacion_poa extends CI_Controller {
     if(count($certificacion)!=0){
       $data['menu']=$this->certificacionpoa->menu(4);
       $data['titulo']='<h1><b>RESPONSABLE : '.$this->session->userdata('funcionario').' -> </b><small>'.$this->certificacionpoa->tp_resp().'</small>';
-      $data['opciones']=' <a class="btn btn-default" href="'.base_url().'index.php/cert/form_items/'.$certificacion[0]['prod_id'].'" target="_blank" title="NUEVA CERTIFICACI&Oacute;N"><i class="fa fa-rotate-left"></i> NUEVA CERTIFICACI&Oacute;N</a>
+      $data['opciones']=' 
+                <a class="btn btn-default" href="'.base_url().'index.php/cert/form_items/'.$certificacion[0]['prod_id'].'" target="_blank" title="NUEVA CERTIFICACI&Oacute;N"><i class="fa fa-rotate-left"></i> NUEVA CERTIFICACI&Oacute;N</a>
+                <a class="btn btn-success" href="'.base_url().'index.php/cert/ajustar_cpoa_rev/'.$cpoa_id.'" target="_blank" title="AJUSTAR CERTIFICACION POA X REVERSION"><i class="fa fa-rotate-left"></i> AJUSTAR POR REVERSION</a>
                 <a class="btn btn-default" href="'.base_url().'index.php/ejec/menu_cpoa" title="SALIR"><i class="fa fa-caret-square-o-left"></i> SALIR</a>';
 
       $data['cuerpo']='<iframe id="ipdf" width="100%"  height="1000px;" src="'.base_url().'index.php/cert/rep_cert_poa/'.$certificacion[0]['cpoa_id'].'"></iframe>'; /// Antiguo
