@@ -669,7 +669,7 @@ class Producto extends CI_Controller {
           $tp_met=3;
         }
         else{
-          $tp_met=$this->input->post('tp_meta');
+          $tp_met=$this->input->post('tp_met');
         }
     
 

@@ -9,6 +9,7 @@ class Programacionpoa extends CI_Controller{
       $this->load->model('mantenimiento/model_ptto_sigep');
       $this->load->model('modificacion/model_modrequerimiento');
       $this->load->model('programacion/insumos/minsumos');
+      $this->load->model('programacion/insumos/model_insumo');
       $this->load->model('ejecucion/model_seguimientopoa');
       $this->load->model('programacion/model_faseetapa');
       $this->load->model('programacion/model_componente');
@@ -374,7 +375,7 @@ class Programacionpoa extends CI_Controller{
         <table class="table table-bordered" id="datos">
               <thead>
               <tr>
-                <th>#</th>
+                <th>#<br>'.$proyecto[0]['aper_id'].'</th>
                 <th>UNIDAD RESPONSABLE </th>
                 <th colspan=2><b>POA PROG. '.$proyecto[0]['aper_programa'].'</b><br>'.$proyecto[0]['aper_descripcion'].'</th>';
                 
@@ -390,7 +391,7 @@ class Programacionpoa extends CI_Controller{
               <tbody>';
               $nroc=0; $nro_ppto=0;
                 $unidades=$this->model_componente->lista_subactividad($proy_id);
-                foreach($unidades  as $pr){
+                foreach($unidades as $pr){
                   if(count($this->model_producto->list_prod($pr['com_id']))!=0){
                     $nroc++;
                     $tabla.=
@@ -409,9 +410,9 @@ class Programacionpoa extends CI_Controller{
                         </td>';
 
                         if(count($programas_bolsas)!=0){
-                          foreach($programas_bolsas  as $row){
-                            $get_prog_bolsa=$this->model_producto->verif_get_uni_resp_programaBolsa_prog($row['aper_id'],$pr['com_id']); // Verifica la Actividad de la Unidad Responsable del Programa Bolsa
-
+                          foreach($programas_bolsas as $row){
+                            //$get_prog_bolsa=$this->model_producto->verif_get_uni_resp_programaBolsa_prog($row['aper_id'],$pr['com_id']); // Verifica la Actividad de la Unidad Responsable del Programa Bolsa
+                            $get_prog_bolsa=$this->model_insumo->verif_insumos_en_bolsas($pr['com_id']);
                             $tabla.='<td align=center>';
                             if(count($get_prog_bolsa)!=0){
                               $tabla.='<a href="javascript:abreVentana(\''.site_url("").'/proy/rep_form5_programa_bolsa/'.$row['aper_id'].'/'.$pr['com_id'].'\');" class="btn btn-default" title="REPORTE FORM. 5"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°5</b></font></a>';
@@ -1583,7 +1584,7 @@ class Programacionpoa extends CI_Controller{
 
               }
 
-              ///------------------------------------------------------------------------ bolsas
+              ///------------------------------------------------------------------------
               $formularioN4=$this->model_producto->get_lista_form4_consolidado($com_id,1);
               foreach($formularioN4 as $rowp){
                 $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
