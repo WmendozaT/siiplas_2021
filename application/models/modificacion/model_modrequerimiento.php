@@ -488,7 +488,7 @@ class Model_modrequerimiento extends CI_Model{
 
 
 
-    /*--- XLS LISTA DE REQUERIMIENTOS ADICIONADOS, MODIFICADOS, ELIMINADOS ---*/
+    /*--- XLS LISTA DE REQUERIMIENTOS ADICIONADOS, MODIFICADOS, ELIMINADOS (revisar)---*/
     public function lista_requerimientos_modificados_unidad($proy_id,$tp_accion){
         //// 1 : Adicion
         //// 2 : Modificacion

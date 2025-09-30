@@ -222,11 +222,11 @@
       echo $tabla;
     }
 
-    /*--- EXPORTAR LISTADO DE PARTIDAS ASIGNADAS PPTO (REGIONAL - DISTRITAL)---*/
-    public function consolidado_partidas_reg_dist_asignadas_institucional(){
-      $titulo='CUADRO COMPARATIVO PARTIDAS ASIGNADAS - INSTITUCIONAL';
+    /*--- EXPORTAR LISTADO DE PARTIDAS ASIGNADAS PPTO (REGIONAL - DISTRITAL) 2026---*/
+    public function consolidado_partidas_regional(){
+      $titulo='CUADRO COMPARATIVO PARTIDAS';
       $tabla='';
-      $detalle=$this->model_ptto_sigep->lista_detalle_regional_distrital_consolidado_partidas_asignadas_nacional(4);
+      $detalle=$this->model_ptto_sigep->lista_detalle_consolidado_partidas_x_regional();
       $tabla.='
         <style>
           table{font-size: 9px;
@@ -250,7 +250,8 @@
             <th>DISTRITAL</th>
             <th>PARTIDA</th>
             <th></th>
-            <th>PPTO. ASIGNADO '.$this->gestion.' GASTO CORRIENTE</th>
+            <th>PPTO. INICIAL '.$this->gestion.'</th>
+            <th>PPTO. VIGENTE '.$this->gestion.'</th>
          
             <th>PPTO. PROG. POA '.$this->gestion.'</th>
             <th>PPTO. CERT. POA '.$this->gestion.'</th>
@@ -258,7 +259,6 @@
           </thead>
           <tbody>';
       foreach ($detalle as $row){
-        //$par_asig_pi=$this->model_ptto_sigep->get_detalle_regional_distrital_consolidado_partidas_asignadas_nacional_pi($row['dep_id'],$row['dist_id'],$row['par_id']);
         $part_prog=$this->model_insumo->get_partida_programado_certificado_regional_distrital($row['dep_id'],$row['dist_id'],$row['par_id']);
         $monto_prog=0;$monto_cert=0;
         if(count($part_prog)!=0){ /// gc
@@ -266,18 +266,14 @@
           $monto_cert=$part_prog[0]['ppto_certificado'];
         }
 
-        /*$ppto_asig_pi=0;
-        if(count($par_asig_pi)!=0){
-          $ppto_asig_pi=$par_asig_pi[0]['ppto_partida_asignado_gestion'];
-        }*/
         $tabla.='
         <tr>
           <td>'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
           <td>'.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</td>
           <td style="text-align:center; font-size:11px">'.$row['partida'].'</td>
           <td>'.mb_convert_encoding($row['par_nombre'], 'cp1252', 'UTF-8').'</td>
-          <td align="right">'.round($row['ppto_partida_asignado_gestion'],2).'</td>
-         
+          <td align="right">'.round($row['ppto_inicial'],2).'</td>
+          <td align="right">'.round($row['ppto_partida_vigente'],2).'</td>
           <td align="right">'.round($monto_prog,2).'</td>
           <td align="right">'.round($monto_cert,2).'</td>
         </tr>';
@@ -299,69 +295,74 @@
       echo $tabla;
     }
 
-    /*--- EXPORTAR LISTADO DE PARTIDAS ASIGNADAS PPTO (INSTITUCIONAL)---*/
-    public function consolidado_partidas_asignadas_institucional(){
-      $titulo='CUADRO COMPARATIVO PARTIDAS ASIGNADAS - INSTITUCIONAL';
-      $tabla='';
-      $detalle=$this->model_ptto_sigep->lista_detalle_consolidado_partidas_asignadas_nacional(4);
-      $tabla.='
-        <style>
-          table{font-size: 9px;
-            width: 100%;
-            max-width:1550px;
-            overflow-x: scroll;
-          }
-          th{
-            padding: 1.4px;
-            text-align: center;
-            font-size: 10px;
-          }
-          td{
-            font-size: 9.5px;
-          }
-        </style>
-        <table border="1" cellpadding="0" cellspacing="0" class="tabla">
-          <thead>
-          <tr>
-            <th style="height:30px;">PARTIDA</th>
-            <th></th>
-            <th>PPTO. ASIGNADO '.$this->gestion.'</th>
-            <th>PPTO. PROG. POA '.$this->gestion.'</th>
-            <th>PPTO. CERT. POA '.$this->gestion.'</th>
-          </tr>
-          </thead>
-          <tbody>';
-      foreach ($detalle as $row){
-        $part_prog=$this->model_insumo->get_partida_programado_certificado_institucional($row['par_id']);
-        $monto_prog=0;$monto_cert=0;
-        if(count($part_prog)!=0){
-          $monto_prog=$part_prog[0]['ppto_programado'];
-          $monto_cert=$part_prog[0]['ppto_certificado'];
-        }
-        $tabla.='
-        <tr>
-          <td style="text-align:center; font-size:11px">'.$row['partida'].'</td>
-          <td>'.mb_convert_encoding($row['par_nombre'], 'cp1252', 'UTF-8').'</td>
-          <td align="right">'.round($row['ppto_partida_asignado_gestion'],2).'</td>
-          <td align="right">'.round($monto_prog,2).'</td>
-          <td align="right">'.round($monto_cert,2).'</td>
-        </tr>';
-      }
-      $tabla.='
-        </tbody>
-      </table>';
 
-      date_default_timezone_set('America/Lima');
-      $fecha = date("d-m-Y H:i:s");
-      header('Content-type: application/vnd.ms-excel');
-      header("Content-Disposition: attachment; filename=CONSOLIDADO_PARTIDAS_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante
-      header("Pragma: no-cache");
-      header("Expires: 0");
-      echo "";
-      ini_set('max_execution_time', 0); 
-      ini_set('memory_limit','3072M');
-      echo $tabla;
-    }
+
+
+
+
+    /*--- EXPORTAR LISTADO DE PARTIDAS ASIGNADAS PPTO (REGIONAL - DISTRITAL)---*/
+    // public function consolidado_partidas_asignadas_institucional(){
+    //   $titulo='CUADRO COMPARATIVO PARTIDAS';
+    //   $tabla='';
+    //   $detalle=$this->model_ptto_sigep->lista_detalle_consolidado_partidas_asignadas_regional();
+    //   $tabla.='
+    //     <style>
+    //       table{font-size: 9px;
+    //         width: 100%;
+    //         max-width:1550px;
+    //         overflow-x: scroll;
+    //       }
+    //       th{
+    //         padding: 1.4px;
+    //         text-align: center;
+    //         font-size: 10px;
+    //       }
+    //       td{
+    //         font-size: 9.5px;
+    //       }
+    //     </style>
+    //     <table border="1" cellpadding="0" cellspacing="0" class="tabla">
+    //       <thead>
+    //       <tr>
+    //         <th style="height:30px;">PARTIDA</th>
+    //         <th></th>
+    //         <th>PPTO. ASIGNADO '.$this->gestion.'</th>
+    //         <th>PPTO. PROG. POA '.$this->gestion.'</th>
+    //         <th>PPTO. CERT. POA '.$this->gestion.'</th>
+    //       </tr>
+    //       </thead>
+    //       <tbody>';
+    //   foreach ($detalle as $row){
+    //     $part_prog=$this->model_insumo->get_partida_programado_certificado_institucional($row['par_id']);
+    //     $monto_prog=0;$monto_cert=0;
+    //     if(count($part_prog)!=0){
+    //       $monto_prog=$part_prog[0]['ppto_programado'];
+    //       $monto_cert=$part_prog[0]['ppto_certificado'];
+    //     }
+    //     $tabla.='
+    //     <tr>
+    //       <td style="text-align:center; font-size:11px">'.$row['partida'].'</td>
+    //       <td>'.mb_convert_encoding($row['par_nombre'], 'cp1252', 'UTF-8').'</td>
+    //       <td align="right">'.round($row['ppto_partida_asignado_gestion'],2).'</td>
+    //       <td align="right">'.round($monto_prog,2).'</td>
+    //       <td align="right">'.round($monto_cert,2).'</td>
+    //     </tr>';
+    //   }
+    //   $tabla.='
+    //     </tbody>
+    //   </table>';
+
+    //   date_default_timezone_set('America/Lima');
+    //   $fecha = date("d-m-Y H:i:s");
+    //   header('Content-type: application/vnd.ms-excel');
+    //   header("Content-Disposition: attachment; filename=CONSOLIDADO_PARTIDAS_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante
+    //   header("Pragma: no-cache");
+    //   header("Expires: 0");
+    //   echo "";
+    //   ini_set('max_execution_time', 0); 
+    //   ini_set('memory_limit','3072M');
+    //   echo $tabla;
+    // }
 
 
     /*--- EXPORTAR LISTADO DE PARTIDAS ASIGNADAS PPTO (UNIDAD / INVERSION)---*/

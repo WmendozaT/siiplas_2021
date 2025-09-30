@@ -54,7 +54,7 @@ class Model_proyecto extends CI_Model{
     }
 
     /*--------------- GET APERTURA PROGRAMATICA ----------*/
-    public function get_aper_programa($aper_id){
+        public function get_aper_programa($aper_id){
         $sql = '
             select *
             from lista_poa_pinversion_nacional('.$this->gestion.')
@@ -67,6 +67,15 @@ class Model_proyecto extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+    
+/*    public function get_aper_programa($aper_id){
+        $sql = '
+            select *
+            from aperturaprogramatica
+            where aper_id='.$aper_id.' and aper_gestion='.$this->gestion.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }*/
 
     public function update_proyecto($data,$data1,$id,$cod,$id_aper){
         $this->db->where('proy_id', $id);

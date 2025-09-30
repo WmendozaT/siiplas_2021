@@ -361,7 +361,7 @@ class Programacionpoa extends CI_Controller{
 
 
     /*------ GET POA -----*/
-    public function mi_poa($proy_id){
+        public function mi_poa($proy_id){
       $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// PROYECTO
       $programas_bolsas=$this->model_proyecto->lista_programas_bosas_distrital($proyecto[0]['dist_id']);
       $tabla='';
@@ -411,14 +411,13 @@ class Programacionpoa extends CI_Controller{
 
                         if(count($programas_bolsas)!=0){
                           foreach($programas_bolsas as $row){
-                            //$get_prog_bolsa=$this->model_producto->verif_get_uni_resp_programaBolsa_prog($row['aper_id'],$pr['com_id']); // Verifica la Actividad de la Unidad Responsable del Programa Bolsa
-                            $get_prog_bolsa=$this->model_insumo->verif_insumos_en_bolsas($pr['com_id']);
+                            $get_prog_bolsa=$this->model_producto->verif_programaBolsa_prog($row['aper_id'],$pr['com_id']); // Verifica la Actividad de la Unidad Responsable del Programa Bolsa
+                            //$get_prog_bolsa=$this->model_insumo->verif_insumos_en_bolsas($pr['com_id']);
                             $tabla.='<td align=center>';
                             if(count($get_prog_bolsa)!=0){
                               $tabla.='<a href="javascript:abreVentana(\''.site_url("").'/proy/rep_form5_programa_bolsa/'.$row['aper_id'].'/'.$pr['com_id'].'\');" class="btn btn-default" title="REPORTE FORM. 5"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°5</b></font></a>';
                             }
                             $tabla.='</td>';
-                          
                           }
                         }
                         $tabla.='
@@ -427,25 +426,15 @@ class Programacionpoa extends CI_Controller{
                   
                 }
               $tabla.='</tbody>';
-                if($nro_ppto>0){
-                  $partidas_asig=$this->model_ptto_sigep->partidas_accion_region($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],1);
+                  $partidas_asig=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']);
                   if(count($partidas_asig)!=0){ //// POA APROBADO
                     $tabla.='
                     <tr bgcolor="#d6ecb3">
                       <td colspan=3><b>CONSOLIDADO TOTAL POA - PRESUPUESTO APROBADO TOTAL POR PARTIDAS </b></td> 
-                      <td align=center><a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado_comparativo/'.$proy_id.'\');"  title="REPORTE CONSOLIDADO COMPARATIVO PTTO POR PARTIDAS" class="btn btn-default" ><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></td>
+                      <td align=center><a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado_comparativo/'.$proy_id.'\');"  title="REPORTE CONSOLIDADO DE PPTO." class="btn btn-default" ><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></td>
                       <td colspan='.count($programas_bolsas).'></td>
                     </tr>';
                   }
-                  else{
-                    $tabla.='
-                    <tr>
-                      <td colspan=3><b>CONSOLIDADO TOTAL PROGRAMADO POR PARTIDAS </b></td>
-                      <td align=center><a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado/'.$proy_id.'\');"  title="REPORTE CONSOLIDADO PRESUPUESTO POR PARTIDAS" class="btn btn-default" ><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></td>
-                      <td colspan='.count($programas_bolsas).'></td>
-                    </tr>';
-                  }
-                }
               $tabla.='
               
             </table>
@@ -1002,7 +991,7 @@ class Programacionpoa extends CI_Controller{
 
   //// ======== CABECERA Y PIE PARA LOS REPORTES POA 2024
   //// Cabecera Reporte form 3, 4 y 5
-  public function cabecera($tp_id,$tp_rep,$proyecto,$com_id){
+  public function cabecera($tp_id,$tp_rep,$proyecto,$componente){
     /// tp_rep : 3 (Foda), 4 (Actividades), 5 (requerimientos), 0 (consolidado ppto)
     $comp='';
     if($tp_rep==0){
@@ -1040,9 +1029,9 @@ class Programacionpoa extends CI_Controller{
       }
 
 
-      $componente=$this->model_componente->get_componente($com_id,$this->gestion);
+      //$componente=$this->model_componente->get_componente($com_id,$this->gestion);
  
-      if($proyecto[0]['por_id']==0){
+      //if($proyecto[0]['por_id']==0){
         $comp='
         <tr>
           <td style="width:20%;">
@@ -1056,7 +1045,7 @@ class Programacionpoa extends CI_Controller{
             </table>
           </td>
         </tr>';
-      }
+      //}
     }
 
     

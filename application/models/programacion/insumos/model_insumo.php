@@ -430,11 +430,27 @@ class Model_insumo extends CI_Model{
                 Inner Join partidas as par On par.par_id=i.par_id
                 where p.prod_id='.$prod_id.' and p.uni_resp='.$com_id.' and p.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
                 group by p.prod_id,p.uni_resp,p.prod_cod,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,i.ins_gestion,i.ins_estado,i.par_id,i.ins_observacion,i.aper_id,i.ins_monto_certificado,par.par_codigo,par.par_nombre
-                order by par.par_codigo,i.ins_id asc';
+                order by p.prod_cod,par.par_codigo,i.ins_id asc';
 
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+    /// lista consolidado de requerimientos (todos) en prog bolsas
+    function lista_requerimientos_inscritos_en_programas_bosas($aper_id,$com_id){
+         $sql = 'select p.prod_id,p.uni_resp,p.prod_cod,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,i.ins_gestion,i.ins_estado,i.par_id,i.ins_observacion,i.aper_id,i.ins_monto_certificado,i.ins_tipo_modificacion,par.par_codigo,par.par_nombre
+                from _productos p
+                Inner Join _insumoproducto as ip On p.prod_id=ip.prod_id
+                Inner Join insumos as i On i.ins_id=ip.ins_id
+                Inner Join partidas as par On par.par_id=i.par_id
+                where i.aper_id='.$aper_id.' and p.uni_resp='.$com_id.' and p.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
+                group by p.prod_id,p.uni_resp,p.prod_cod,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,i.ins_gestion,i.ins_estado,i.par_id,i.ins_observacion,i.aper_id,i.ins_monto_certificado,par.par_codigo,par.par_nombre
+                order by p.prod_cod,par.par_codigo,i.ins_id asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 
     /// lista consolidado de requerimientos (todos) en prog bolsas
     function verif_insumos_en_bolsas($com_id){
@@ -442,21 +458,6 @@ class Model_insumo extends CI_Model{
                 from _productos p
                 Inner Join _insumoproducto as ip On p.prod_id=ip.prod_id
                 where p.uni_resp='.$com_id.' and p.estado!=\'3\' ';
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }
-
-    /// lista consolidado de requerimientos (todos) en prog bolsas
-    function lista_requerimientos_inscritos_en_programas_bosas($com_id){
-         $sql = 'select p.prod_id,p.uni_resp,p.prod_cod,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,i.ins_gestion,i.ins_estado,i.par_id,i.ins_observacion,i.aper_id,i.ins_monto_certificado,i.ins_tipo_modificacion,par.par_codigo,par.par_nombre
-                from _productos p
-                Inner Join _insumoproducto as ip On p.prod_id=ip.prod_id
-                Inner Join insumos as i On i.ins_id=ip.ins_id
-                Inner Join partidas as par On par.par_id=i.par_id
-                where p.uni_resp='.$com_id.' and p.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
-                group by p.prod_id,p.uni_resp,p.prod_cod,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,i.ins_gestion,i.ins_estado,i.par_id,i.ins_observacion,i.aper_id,i.ins_monto_certificado,par.par_codigo,par.par_nombre
-                order by par.par_codigo,i.ins_id asc';
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -477,8 +478,6 @@ class Model_insumo extends CI_Model{
                     where p.prod_id='.$prod_id.' and p.uni_resp='.$com_id.' and p.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
                     group by p.prod_id,p.uni_resp,p.prod_cod,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,i.ins_gestion,i.ins_estado,i.par_id,i.ins_observacion,i.aper_id,i.ins_monto_certificado,par.par_codigo,par.par_nombre
                     order by par.par_codigo,i.ins_id asc
-
-
                 ) poa
                 group by poa.prod_id,poa.par_id,poa.par_codigo,poa.par_nombre
                 order by poa.par_codigo asc';
@@ -487,21 +486,20 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
-    // LISTA CONSOLIDADO POR PARTIDAS PROGRAMAS BOLSAS 
-    function list_consolidado_partidas_programas_boLsas_uresponsable($com_id){
-         $sql = 'select poa.prod_id,poa.par_id,poa.par_codigo,poa.par_nombre,SUM(poa.ins_costo_total) as monto
+    // LISTA CONSOLIDADO POR PARTIDAS PROGRAMAS BOLSAS 2026
+    function list_consolidado_partidas_programas_boLsas_uresponsable($aper_id,$com_id){
+         $sql = 'select poa.par_id,poa.par_codigo,poa.par_nombre,SUM(poa.ins_costo_total) as monto
                 from (
-
                     select p.prod_id,p.uni_resp,p.prod_cod,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,i.ins_gestion,i.ins_estado,i.par_id,i.ins_observacion,i.aper_id,i.ins_monto_certificado,par.par_codigo,par.par_nombre
                     from _productos p
                     Inner Join _insumoproducto as ip On p.prod_id=ip.prod_id
                     Inner Join insumos as i On i.ins_id=ip.ins_id
                     Inner Join partidas as par On par.par_id=i.par_id
-                    where p.uni_resp='.$com_id.' and p.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
+                    where i.aper_id='.$aper_id.' and p.uni_resp='.$com_id.' and p.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
                     group by p.prod_id,p.uni_resp,p.prod_cod,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,i.ins_gestion,i.ins_estado,i.par_id,i.ins_observacion,i.aper_id,i.ins_monto_certificado,par.par_codigo,par.par_nombre
                     order by par.par_codigo,i.ins_id asc
                 ) poa
-                group by poa.prod_id,poa.par_id,poa.par_codigo,poa.par_nombre
+                group by poa.par_id,poa.par_codigo,poa.par_nombre
                 order by poa.par_codigo asc';
 
         $query = $this->db->query($sql);

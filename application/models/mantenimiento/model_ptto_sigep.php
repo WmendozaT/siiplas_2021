@@ -119,11 +119,35 @@ class Model_ptto_sigep extends CI_Model{
     }
 
 
-    /*------ Lista Consolidado detalle de Partidas (Regional, Distrital Asignadas) Institucional (Gasto Corriente / Proyecto de Inversion)-----*/
-    public function lista_detalle_regional_distrital_consolidado_partidas_asignadas_nacional($tp_id){
-        $sql = 'select poa.dep_id,poa.dep_departamento,poa.dist_id,poa.dist_distrital,poa.par_id,poa.partida, poa.par_nombre, SUM(poa.ppto_partida_asignado_gestion) as ppto_partida_asignado_gestion
+    // /*------ Lista Consolidado detalle de Partidas (Regional, Distrital Asignadas) Institucional (Gasto Corriente / Proyecto de Inversion)-----*/
+    // public function lista_detalle_regional_distrital_consolidado_partidas_asignadas_nacional($tp_id){
+    //     $sql = 'select poa.dep_id,poa.dep_departamento,poa.dist_id,poa.dist_distrital,poa.par_id,poa.partida, poa.par_nombre, SUM(poa.ppto_partida_asignado_gestion) as ppto_partida_asignado_gestion
+    //             from lista_partidas_ppto_asignadas_gestion_nacional('.$this->gestion.') poa
+    //             where poa.tp_id='.$tp_id.'
+    //             group by poa.dep_id,poa.dep_departamento,poa.dist_id,poa.dist_distrital,poa.par_id,poa.partida, poa.par_nombre
+    //             order by poa.dep_id,poa.dist_id,poa.partida asc';
+
+    //     $query = $this->db->query($sql);
+    //     return $query->result_array();
+    // }
+
+    // /*------ Lista Consolidado Get detalle de Partidas (Proyecto de Inversion)-----*/
+    // public function get_detalle_regional_distrital_consolidado_partidas_asignadas_nacional_pi($dep_id,$dist_id,$par_id){
+    //     $sql = 'select poa.dep_id,poa.dep_departamento,poa.dist_id,poa.dist_distrital,poa.par_id,poa.partida, poa.par_nombre, SUM(poa.ppto_partida_asignado_gestion) as ppto_partida_asignado_gestion
+    //             from lista_partidas_ppto_asignadas_gestion_nacional('.$this->gestion.') poa
+    //             where poa.tp_id=\'1\' and poa.dep_id='.$dep_id.' and poa.dist_id='.$dist_id.' and poa.par_id='.$par_id.'
+    //             group by poa.dep_id,poa.dep_departamento,poa.dist_id,poa.dist_distrital,poa.par_id,poa.partida, poa.par_nombre
+    //             order by poa.dep_id,poa.dist_id,poa.partida asc';
+
+    //     $query = $this->db->query($sql);
+    //     return $query->result_array();
+    // }
+
+    /*------ Lista Consolidado detalle de Partidas (Asignadas) Regional (Gasto Corriente o Proyecto de Inversion)-----*/
+    public function lista_detalle_consolidado_partidas_x_regional(){
+        $sql = 'select poa.dep_id,poa.dep_departamento,poa.dist_id,poa.dist_distrital,poa.par_id,poa.partida, poa.par_nombre, SUM(poa.ppto_partida_inicial) as ppto_inicial, SUM(poa.ppto_partida_asignado_gestion) as ppto_partida_vigente
                 from lista_partidas_ppto_asignadas_gestion_nacional('.$this->gestion.') poa
-                where poa.tp_id='.$tp_id.'
+
                 group by poa.dep_id,poa.dep_departamento,poa.dist_id,poa.dist_distrital,poa.par_id,poa.partida, poa.par_nombre
                 order by poa.dep_id,poa.dist_id,poa.partida asc';
 
@@ -131,57 +155,7 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
-    /*------ Lista Consolidado Get detalle de Partidas (Proyecto de Inversion)-----*/
-    public function get_detalle_regional_distrital_consolidado_partidas_asignadas_nacional_pi($dep_id,$dist_id,$par_id){
-        $sql = 'select poa.dep_id,poa.dep_departamento,poa.dist_id,poa.dist_distrital,poa.par_id,poa.partida, poa.par_nombre, SUM(poa.ppto_partida_asignado_gestion) as ppto_partida_asignado_gestion
-                from lista_partidas_ppto_asignadas_gestion_nacional('.$this->gestion.') poa
-                where poa.tp_id=\'1\' and poa.dep_id='.$dep_id.' and poa.dist_id='.$dist_id.' and poa.par_id='.$par_id.'
-                group by poa.dep_id,poa.dep_departamento,poa.dist_id,poa.dist_distrital,poa.par_id,poa.partida, poa.par_nombre
-                order by poa.dep_id,poa.dist_id,poa.partida asc';
 
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }
-
-    /*------ Lista Consolidado detalle de Partidas (Asignadas) Institucional (Gasto Corriente o Proyecto de Inversion)-----*/
-    public function lista_detalle_consolidado_partidas_asignadas_nacional($tp_id){
-        $sql = 'select poa.par_id,poa.partida, poa.par_nombre, SUM(poa.ppto_partida_asignado_gestion) as ppto_partida_asignado_gestion
-                from lista_partidas_ppto_asignadas_gestion_nacional('.$this->gestion.') poa
-      
-                group by poa.par_id,poa.partida, poa.par_nombre
-                order by poa.partida asc';
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }
-
-
-
-    /*------ Lista Consolidado detalle de Partidas (Asignadas) Institucional (Gasto Corriente o Proyecto de Inversion)-----*/
-    public function lista_detalle_consolidado_partidas_asignadas_nacional2(){
-        $sql = 'select poa.dep_departamento,poa.dist_distrital,poa.abrev,poa.da,poa.ue,poa.prog,poa.proy,poa.act,poa.aper_id,poa.proy_id,poa.proy_nombre,poa.tipo,poa.proy_sisin,poa.pfec_id,poa.tp_id,ppto.par_id,ppto.partida,ppto.ppto_inicial,ppto.importe,ppto.ppto_saldo_ncert
-                from lista_poa_nacional('.$this->gestion.') poa
-                Inner Join ptto_partidas_sigep as ppto On ppto.aper_id=poa.aper_id
-                order by poa.dep_cod,poa.da,poa.ue,poa.prog,poa.act asc';
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }
-
-
-
-
-
-    /*------ Lista Consolidado detalle de Partidas (Asignadas) Por Unidad (Gasto Corriente / Proyecto de Inversion)-----*/
-    public function lista_detalle_consolidado_partidas_asignadas_unidades($tp_id){
-        $sql = 'select *
-                from lista_partidas_ppto_asignadas_gestion_nacional('.$this->gestion.')
-                where tp_id='.$tp_id.'
-                order by dep_id,dist_id,prog,act,partida asc';
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }
 
 
     /*------ Lista Partida Ppto Asignado Sigep Regional 2023-----*/

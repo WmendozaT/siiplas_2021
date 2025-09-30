@@ -115,34 +115,53 @@ class model_producto extends CI_Model {
     }
 
 
-    /*----- GET UNIDAD RESPONSABLE POR ACTIVIDAD (PROG BOLSA) -----*/
-    function verif_get_uni_resp_programaBolsa($com_id){
+    // /*----- GET UNIDAD RESPONSABLE POR ACTIVIDAD (PROG BOLSA) -----*/
+    // function verif_get_uni_resp_programaBolsa($com_id){
+    //     $sql = '
+    //         select prod.*,apg.*,prog.*
+    //         from _productos prod
+    //         Inner Join _componentes as c On prod.com_id=c.com_id
+    //         Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+    //         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+                
+    //         Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=prod.prod_id
+    //         where prod.uni_resp='.$com_id.' and prog.g_id='.$this->gestion.'
+    //         order by apg.aper_programa, prod.prod_cod asc'; 
+
+    //     $query = $this->db->query($sql);
+    //     return $query->result_array();
+    // }
+
+    /*----- GET UNIDAD RESPONSABLE POR programa (PROG BOLSA) -----*/
+    function verif_programaBolsa_prog($aper_id,$com_id){
         $sql = '
-            select prod.*,apg.*,prog.*
+            select *
             from _productos prod
             Inner Join _componentes as c On prod.com_id=c.com_id
             Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
-            Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
-                
-            Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=prod.prod_id
-            where prod.uni_resp='.$com_id.' and prog.g_id='.$this->gestion.'
-            order by apg.aper_programa, prod.prod_cod asc'; 
+            where pfe.aper_id='.$aper_id.' and prod.uni_resp='.$com_id.''; 
 
         $query = $this->db->query($sql);
         return $query->result_array();
     }
 
-        /*----- GET UNIDAD RESPONSABLE POR programa (PROG BOLSA) -----*/
+
+
+
+    /*----- GET UNIDAD RESPONSABLE POR programa (PROG BOLSA) -----*/
     function verif_get_uni_resp_programaBolsa_prog($aper_id,$com_id){
         $sql = '
-            select prod.*,apg.*,prog.*,pfe.*
+            select prod.*,p.*,dist.*,dep.*,ua.*,te.*,apg.*,pfe.*
             from _productos prod
             Inner Join _componentes as c On prod.com_id=c.com_id
             Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
             Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
-                
-            Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=prod.prod_id
-            where apg.aper_id='.$aper_id.' and prod.uni_resp='.$com_id.' and prog.g_id='.$this->gestion.'
+            Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+            Inner Join _distritales as dist On dist.dist_id=p.dist_id
+            Inner Join _departamentos as dep On dep.dep_id=p.dep_id  
+            Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+            Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+            where apg.aper_id='.$aper_id.' and prod.uni_resp='.$com_id.' and prod.estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
             order by apg.aper_programa, prod.prod_cod asc'; 
 
         $query = $this->db->query($sql);

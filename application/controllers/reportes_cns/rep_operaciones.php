@@ -86,8 +86,8 @@ class Rep_operaciones extends CI_Controller {
 
           <div class="col-sm-2">
             <div class="well well-sm bg-color-teal txt-color-white text-center">
-              <h5>CONSOLIDADO x PARTIDA.xls<br><b>INSTITUCIONAL</b></h5>
-              <a href="'.site_url("").'/rep/exportar_detalle_partidas_asignadas_institucional" target=_blank title="DETALLE PARTIDA INSTITUCIONAL"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="30px" HEIGHT="30px"/></a>
+              <h5>CONSOLIDADO x PARTIDA.xls<br><b>REGIONAL</b></h5>
+              <a href="'.site_url("").'/rep/exportar_detalle_partidas_asignadas_regional" target=_blank title="DETALLE PARTIDA INSTITUCIONAL"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="30px" HEIGHT="30px"/></a>
             </div>
           </div>
 

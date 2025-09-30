@@ -139,9 +139,9 @@ $route['rep/get_uadministrativas'] = 'reportes_cns/rep_operaciones/get_unidades_
 $route['rep/exportar_operaciones_distrital/(:any)'] = 'reportes_cns/exporting_datos/operaciones_distrital/$1/$2/$3'; ///// Exportar Operaciones por distrital 2020-2021
 $route['rep/exportar_form4_institucional'] = 'reportes_cns/exporting_datos/formulario4_institucional'; ///// Exportar formulario N 4 Institucional
 $route['rep/exportar_detalle_reg_dist_partidas_asignadas_institucional'] = 'reportes_cns/exporting_datos/consolidado_partidas_reg_dist_asignadas_institucional'; ///// Exportar Consolidado Partidas Reg Dist (PPto Asignado) Institucional
-$route['rep/exportar_detalle_partidas_asignadas_institucional'] = 'reportes_cns/exporting_datos/consolidado_partidas_asignadas_institucional'; ///// Exportar Consolidado Partidas (PPto Asignado) Institucional
-$route['rep/exportar_detalle_ppto_partidas_asignadas_institucional'] = 'reportes_cns/exporting_datos/consolidado_ppto_partidas_asignadas_institucional'; ///// Exportar Consolidado Partidas del presupuesto inicial asignado
-$route['rep/exportar_detalle_partidas_unidad'] = 'reportes_cns/exporting_datos/consolidado_partidas_asignadas_unidad'; ///// Exportar Consolidado Partidas (PPto Asignado) por Unidad
+$route['rep/exportar_detalle_partidas_asignadas_regional'] = 'reportes_cns/exporting_datos/consolidado_partidas_regional'; ///// Exportar Consolidado Partidas (PPto Asignado) Institucional
+//$route['rep/exportar_detalle_ppto_partidas_asignadas_institucional'] = 'reportes_cns/exporting_datos/consolidado_ppto_partidas_asignadas_institucional'; ///// Exportar Consolidado Partidas del presupuesto inicial asignado
+//$route['rep/exportar_detalle_partidas_unidad'] = 'reportes_cns/exporting_datos/consolidado_partidas_asignadas_unidad'; ///// Exportar Consolidado Partidas (PPto Asignado) por Unidad
 
 $route['rep/consolidado_mod5_mensual/(:any)'] = 'modificaciones/cmod_insumo/consolidado_form5_mensual/$1/$2'; ///// Generar Reporte de Modificaciones POa por Meses
 
