@@ -85,7 +85,7 @@ class model_producto extends CI_Model {
             Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
             Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
             where dist_id='.$dist_id.' and c.estado!=\'3\'
-            order by poa.prog,poa.proy,poa.act asc'; 
+            order by poa.aper_programa,poa.aper_proyecto,poa.aper_actividad asc'; 
         }
         else{
             $sql = '
@@ -94,8 +94,8 @@ class model_producto extends CI_Model {
             Inner Join _componentes as c On c.pfec_id=poa.pfec_id
             Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
             Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
-            where dist_id='.$dist_id.' and c.estado!=\'3\' and poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\' and poa.prog!=\'770\' and poa.prog!=\'960\' 
-            order by poa.prog,poa.proy,poa.act asc'; 
+            where dist_id='.$dist_id.' and c.estado!=\'3\' and poa.aper_programa!=\'098\' and poa.aper_programa!=\'099\' and poa.aper_programa!=\'720\' and poa.aper_programa!=\'770\' and poa.aper_programa!=\'960\' 
+            order by poa.aper_programa,poa.aper_proyecto,poa.aper_actividad asc'; 
         }
         
 
@@ -107,36 +107,20 @@ class model_producto extends CI_Model {
     function get_uni_resp_prog770($com_id,$uni_resp){
         $sql = '
         select *
-                from _productos
-                where com_id='.$com_id.' and uni_resp='.$uni_resp.' and estado!=\'3\''; 
+            from _productos
+            where com_id='.$com_id.' and uni_resp='.$uni_resp.' and estado!=\'3\''; 
 
         $query = $this->db->query($sql);
         return $query->result_array();
     }
 
 
-    // /*----- GET UNIDAD RESPONSABLE POR ACTIVIDAD (PROG BOLSA) -----*/
-    // function verif_get_uni_resp_programaBolsa($com_id){
-    //     $sql = '
-    //         select prod.*,apg.*,prog.*
-    //         from _productos prod
-    //         Inner Join _componentes as c On prod.com_id=c.com_id
-    //         Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
-    //         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
-                
-    //         Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=prod.prod_id
-    //         where prod.uni_resp='.$com_id.' and prog.g_id='.$this->gestion.'
-    //         order by apg.aper_programa, prod.prod_cod asc'; 
-
-    //     $query = $this->db->query($sql);
-    //     return $query->result_array();
-    // }
-
     /*----- GET UNIDAD RESPONSABLE POR programa (PROG BOLSA) -----*/
     function verif_programaBolsa_prog($aper_id,$com_id){
         $sql = '
             select *
             from _productos prod
+            Inner Join _insumoproducto as ins On ins.prod_id=prod.prod_id
             Inner Join _componentes as c On prod.com_id=c.com_id
             Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
             where pfe.aper_id='.$aper_id.' and prod.uni_resp='.$com_id.''; 
@@ -167,20 +151,6 @@ class model_producto extends CI_Model {
         $query = $this->db->query($sql);
         return $query->result_array();
     }
-
-
-    /*-----GET RELACION PROG 770 - PROD PARA BUSCAR LA UNIDAD RESPONSABLE (2023) -----*/
-/*    function get_relacion_prog_770_producto($dist_id,$prog,$com_id){
-        $sql = '
-        select *
-                from lista_poa_gastocorriente_distrital('.$dist_id.','.$this->gestion.') poa
-                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
-                 Inner Join _productos as prod On prod.com_id=c.com_id
-                where poa.prog=\''.$prog.'\' and prod.uni_resp='.$com_id.' and prod.estado!=\'3\' and c.estado!=\'3\''; 
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
 
 
     /*----- GET LISTA DE ACTIVIDADES ALINEADO A LA UNIDAD RESPONSABLE DE LOS PROGRAMAS BOLSA 2023 (REVISAR)-----*/

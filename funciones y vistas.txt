@@ -742,16 +742,20 @@ dist_distrital varchar,
 abrev varchar,
 da varchar,
 ue varchar,
-prog varchar,
-proy varchar,
-act varchar,
+aper_programa varchar,
+aper_proyecto varchar,
+aper_actividad varchar,
 aper_descripcion varchar,
 proy_id numeric,
 proy_estado integer,
+proy_nombre varchar,
+por_id integer,
+tp_id numeric,
 actividad varchar,
 tipo varchar,
 ta_id integer,
 tipo_adm varchar,
+establecimiento varchar,
 aper_id numeric,
 aper_proy_estado integer,
 pfec_id numeric,
@@ -759,7 +763,7 @@ pfec_estado integer,
 aper_gestion integer) AS
 
 $$
-select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,ds.abrev,ds.da,ds.ue,apg.aper_programa as prog,apg.aper_proyecto as proy,apg.aper_actividad as act,apg.aper_descripcion,p.proy_id,p.proy_estado,ua.act_descripcion as actividad,te.tipo,te.ta_id,te.tipo_adm,apg.aper_id,apg.aper_proy_estado,pfe.pfec_id,pfe.pfec_estado,apg.aper_gestion
+select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,ds.abrev,ds.da,ds.ue,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,p.proy_id,p.proy_estado,p.proy_nombre,p.por_id,p.tp_id,ua.act_descripcion as actividad,te.tipo,te.ta_id,te.tipo_adm,te.establecimiento,apg.aper_id,apg.aper_proy_estado,pfe.pfec_id,pfe.pfec_estado,apg.aper_gestion
 from _proyectofaseetapacomponente pfe
 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
 Inner Join _proyectos as p On p.proy_id=pfe.proy_id
@@ -1157,6 +1161,8 @@ aper_actividad varchar,
 
 proy_id numeric,
 actividad varchar,
+proy_nombre varchar,
+por_id integer,
 abrev varchar,
 tipo varchar,
 com_id numeric,
@@ -1211,7 +1217,7 @@ fun_materno varchar) AS
 
 $$
 
-SELECT poa.dep_id,poa.dep_cod,poa.dep_departamento,poa.dist_id,poa.dist_cod,poa.dist_distrital,poa.da,poa.ue,poa.aper_id,poa.prog aper_programa,poa.proy aper_proyecto,poa.act aper_actividad,poa.proy_id,poa.actividad,poa.abrev, poa.tipo,
+SELECT poa.dep_id,poa.dep_cod,poa.dep_departamento,poa.dist_id,poa.dist_cod,poa.dist_distrital,poa.da,poa.ue,poa.aper_id,poa.aper_programa,poa.aper_proyecto,poa.aper_actividad,poa.proy_id,poa.actividad,poa.proy_nombre,poa.por_id,poa.abrev, poa.tipo,
      c.com_id,ser.serv_id,ser.serv_cod,tpsa.tipo_subactividad,ser.serv_descripcion,prod.prod_id,prod.prod_cod,prod.prod_producto,prod.or_id,ore.or_codigo,ore.or_objetivo,og.acc_id,og.og_id,og.og_codigo,og.og_objetivo,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_monto_certificado,i.ins_detalle,i.ins_unidad_medida,
      i.ins_gestion,i.ins_observacion,i.ins_tipo_modificacion,i.par_id,par.par_codigo,par.par_nombre,itemp.programado_total,itemp.mes1,itemp.mes2,itemp.mes3,itemp.mes4,itemp.mes5,itemp.mes6,itemp.mes7,itemp.mes8,itemp.mes9,itemp.mes10,
      itemp.mes11,itemp.mes12,fun.fun_nombre,fun.fun_paterno,fun.fun_materno
@@ -1237,7 +1243,7 @@ Inner Join funcionario as fun On fun.fun_id=i.fun_id
 Inner Join vista_temporalidad_insumo as itemp On itemp.ins_id=i.ins_id
                 
 WHERE c.estado!=3 and prod.estado!=3 and i.ins_estado!=3 and i.aper_id!=0
-ORDER BY poa.dep_id,poa.dist_id,poa.prog,poa.act,ser.serv_cod, prod.prod_cod, par.par_codigo, i.ins_id asc;
+ORDER BY poa.dep_id,poa.dist_id,poa.aper_programa,poa.aper_actividad,ser.serv_cod, prod.prod_cod, par.par_codigo, i.ins_id asc;
 $$ LANGUAGE sql
 
           

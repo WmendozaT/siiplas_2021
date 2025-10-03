@@ -1469,20 +1469,6 @@ class Model_proyecto extends CI_Model{
 
     /*-------- LISTA OPERACION DE FUNCIONAMIENTO - GASTO CORRIENTE POR REGIONAL --------*/
     public function list_gasto_corriente_regional($dep_id){
-        /*$sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,apg.archivo_pdf,
-                    apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
-                        from _proyectos as p
-                        Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
-                        Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
-                        Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                        Inner Join _departamentos as d On d.dep_id=p.dep_id
-                        Inner Join _distritales as ds On ds.dist_id=p.dist_id
-                        Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-                        Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-                        Inner Join uni_gestion as ug On ua.act_id=ug.act_id
-                        where d.dep_id='.$dep_id.' and p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and p.tp_id=\'4\' and ug.g_id='.$this->gestion.' and apg.aper_estado!=\'3\'
-                        ORDER BY apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,te.tn_id, te.te_id asc';*/
-
         $sql = 'select *
                 from lista_poa_gastocorriente_nacional('.$this->gestion.')
                 where dep_id='.$dep_id.'';
@@ -1780,11 +1766,10 @@ class Model_proyecto extends CI_Model{
     /*-- Lista de Programas Bolsa por Distrital --*/
     public function lista_programas_bosas_distrital($dist_id){ /// 
         $sql = '
-           select poa.*, p.por_id
-                from lista_poa_gastocorriente_distrital('.$dist_id.','.$this->gestion.') poa
-                Inner Join _proyectos as p On p.proy_id=poa.proy_id
-                where p.por_id=\'1\'
-                order by poa.prog asc';
+            select poa.*
+            from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
+            where poa.dist_id='.$dist_id.' and poa.por_id=\'1\'
+            order by poa.aper_programa asc';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
