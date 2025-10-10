@@ -192,7 +192,7 @@ class Ccertificacion_poa extends CI_Controller {
                  <br>
                 <div class="alert alert-block alert-warning">
                   <a class="close" data-dismiss="alert" href="#">×</a>
-                  <h4 class="alert-heading"><i class="fa fa-check-square-o"></i> Certificación POA (con cargo a presupesto aprobado 2024)!</h4>
+                  <h4 class="alert-heading"><i class="fa fa-check-square-o"></i> Certificación POA (con cargo a presupesto aprobado '.$this->gestion.')!</h4>
                 </div>';
               }
               $data['formulario'].='

@@ -2776,7 +2776,10 @@ ae.acc_descripcion,
 oe.obj_codigo,
 oe.obj_descripcion,
 prod.prod_cod,
-prod.prod_producto
+prod.prod_producto,
+prod.uni_resp,
+c2.com_componente as unidad_responsable,
+tpsa2.tipo_subactividad as tp_subactividad
 
     from certificacionpoa cpoa
         Inner Join _componentes as c On c.com_id=cpoa.com_id
@@ -2791,6 +2794,8 @@ prod.prod_producto
         Inner Join _distritales as dist On dist.dist_id=p.dist_id
     Inner Join _departamentos as dep On dep.dep_id=p.dep_id
     Inner Join _productos as prod On prod.prod_id=cpoa.prod_id
+    Inner Join _componentes as c2 On prod.uni_resp=c2.com_id
+    Inner Join tipo_subactividad as tpsa2 On tpsa2.tp_sact=c2.tp_sact
     Inner Join objetivos_regionales as ore On ore.or_id=prod.or_id
     Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
     Inner Join objetivo_gestion as og On og.og_id=opm.og_id
@@ -2867,7 +2872,9 @@ SELECT
     oe.obj_descripcion,
     prod.prod_cod,
     prod.prod_producto,
-    prod.uni_resp
+    prod.uni_resp,
+    c2.com_componente AS unidad_responsable,
+    tpsa2.tipo_subactividad AS tp_subactividad
     
    FROM certificacionpoa_anulado canulado
      JOIN certificacionpoa cpoa ON cpoa.cpoa_id = canulado.cpoa_id
@@ -2883,6 +2890,8 @@ SELECT
      JOIN _distritales dist ON dist.dist_id = p.dist_id
      JOIN _departamentos dep ON dep.dep_id = p.dep_id::numeric
      JOIN _productos prod ON prod.prod_id = cpoa.prod_id
+      JOIN _componentes c2 ON prod.uni_resp = c2.com_id
+     JOIN tipo_subactividad tpsa2 ON tpsa2.tp_sact = c2.tp_sact
      JOIN objetivos_regionales ore ON ore.or_id = prod.or_id
      JOIN objetivo_programado_mensual opm ON ore.pog_id = opm.pog_id
      JOIN objetivo_gestion og ON og.og_id = opm.og_id

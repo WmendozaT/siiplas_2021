@@ -631,6 +631,7 @@ $route['ediciones']='mantenimiento/cajustes/menu_ajustes';// Para los ajustes qu
 $route['eventosDNP']='mantenimiento/ceventos_dnp/menu_eventos';// Listado de Eventos de Planificacion
 $route['participantes_eventosDNP/(:any)']='mantenimiento/ceventos_dnp/participantes/$1';// Listado de Participantes
 $route['certificado/(:any)']='mantenimiento/ceventos_dnp/certificado/$1';// Certificado de Participacion
+$route['certificado_fr/(:any)']='mantenimiento/ceventos_dnp/certificado_fr/$1';// Certificado de Participacion Fr
 
 $route['consulta_eventosDNP/(:any)']='mantenimiento/ceventos_dnp/valida_ingreso/$1';// Certificado de Participacion
 

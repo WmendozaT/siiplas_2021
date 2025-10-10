@@ -918,11 +918,11 @@ class User extends CI_Controller{
     public function menu_principal_roles(){
         $fun_id = $this->session->userdata('fun_id');
         $menus = $this->model_configuracion->modulos($this->gestion);
-        //$menus = $this->model_control_menus->menu_segun_roles($fun_id);
         
         $vector;
         $n = 0;
         if(count($menus)!=0){
+            //echo $this->tp_adm;
             if($this->tp_adm==1){
                 $menus=$this->model_configuracion->list_modulos();
                 foreach ($menus as $fila) {

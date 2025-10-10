@@ -561,67 +561,62 @@ class Model_certificacion extends CI_Model{
         return $query->num_rows();
     }
 
-    /*----- LISTA DE CERTIFICACIONES POA 2020 ----*/
+    /*----- LISTA DE CERTIFICACIONES POA 2026 ----*/
     public function list_certificados(){
         $dep=$this->dep_dist($this->dist);
+
         /// Administrador Nacional
         if($this->adm==1){
-            $sql = 'select *
+            $sql = 'select cp.*, poa.*,poa.prog aper_programa,poa.proy aper_programa, poa.act aper_actividad,sa.*,tpsa.*
                     from certificacionpoa cp
-                    Inner Join _proyectos as p On p.proy_id=cp.proy_id
-                    Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
+                    Inner Join lista_poa_nacional('.$this->gestion.') as poa On poa.proy_id=cp.proy_id
                     Inner Join _componentes as c On c.com_id=cp.com_id
                     Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
                     Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
-
-                    Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
-                    Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
-                    Inner Join _departamentos as d On d.dep_id=p.dep_id
-                    Inner Join _distritales as ds On ds.dist_id=p.dist_id
-                    Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-                    Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-                    where cpoa_gestion='.$this->gestion.' and cp.cpoa_estado!=\'3\' and apg.aper_estado!=\'3\' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
+                    where cpoa_gestion='.$this->gestion.' and (cp.cpoa_estado!=\'3\' and cp.cpoa_estado!=\'0\')
                     order by cpoa_id asc';
         }
         /// Administrador Regional/Distrital
         else{
             if($this->dist_tp==1){ /// Regional
-                $sql = 'select *
-                        from certificacionpoa cp
-                        Inner Join _proyectos as p On p.proy_id=cp.proy_id
-                        Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
-                        Inner Join _componentes as c On c.com_id=cp.com_id
-                        Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
-                        Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
-
-                        Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
-                        Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
-                        Inner Join _departamentos as d On d.dep_id=p.dep_id
-                        Inner Join _distritales as ds On ds.dist_id=p.dist_id
-                        Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-                        Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-                        where p.dep_id='.$dep[0]['dep_id'].' and cpoa_gestion='.$this->gestion.' and (cp.cpoa_estado!=\'3\' and cp.cpoa_estado!=\'0\') and apg.aper_estado!=\'3\' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
-                        order by cpoa_id asc';
+                $id= 'poa.dep_id='.$dep[0]['dep_id'].'';
             }
             else{ /// Distrital
-                $sql = 'select *
-                        from certificacionpoa cp
-                        Inner Join _proyectos as p On p.proy_id=cp.proy_id
-                        Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
-                        Inner Join _componentes as c On c.com_id=cp.com_id
-                        Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
-                        Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
-
-                        Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
-                        Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
-                        Inner Join _departamentos as d On d.dep_id=p.dep_id
-                        Inner Join _distritales as ds On ds.dist_id=p.dist_id
-                        Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-                        Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-                        where p.dep_id='.$dep[0]['dep_id'].' and p.dist_id='.$this->dist.'and cpoa_gestion='.$this->gestion.' and (cp.cpoa_estado!=\'3\' and cp.cpoa_estado!=\'0\') and apg.aper_estado!=\'3\' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
-                        order by cpoa_id asc';
+                $id= 'poa.dep_id='.$dep[0]['dep_id'].' and poa.dist_id='.$this->dist.'';
             }
+
+            $sql = 'select cp.*, poa.*,poa.prog aper_programa,poa.proy aper_proyecto, poa.act aper_actividad,sa.*,tpsa.*
+                    from certificacionpoa cp
+                    Inner Join lista_poa_nacional('.$this->gestion.') as poa On poa.proy_id=cp.proy_id
+                    Inner Join _componentes as c On c.com_id=cp.com_id
+                    Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+                    Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+                    where '.$id.' and cpoa_gestion='.$this->gestion.' and (cp.cpoa_estado!=\'3\' and cp.cpoa_estado!=\'0\')
+                    order by cpoa_id asc';
         }
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+        /*----- LISTA DE CERTIFICACIONES POA 2026 ----*/
+    public function list_certificados_anulados(){
+        $dep=$this->dep_dist($this->dist);
+        if($this->dist_tp==1){ /// Regional
+            $id= 'p.dep_id='.$dep[0]['dep_id'].'';
+        }
+        else{ /// Distrital
+            $id= 'p.dep_id='.$dep[0]['dep_id'].' and p.dist_id='.$this->dist.'';
+        }
+
+        $sql = 'select ca.cpoaa_id,ca.cite,ca.cpoaa_fecha,ca.justificacion,ca.cpoa_codigo,cpoa.cpoa_gestion, ca.fun_id,fun.fun_nombre,fun.fun_paterno,fun.fun_materno,cpoa.cpoa_id
+                from certificacionpoa_anulado ca
+                Inner Join funcionario as fun On fun.fun_id=ca.fun_id
+                Inner Join certificacionpoa as cpoa On cpoa.cpoa_id=ca.cpoa_id
+                Inner Join _proyectos as p On p.proy_id=cpoa.proy_id
+                where ca.tp_anulado=\'3\' and cpoa.cpoa_gestion='.$this->gestion.' and '.$id.'
+                order by ca.cpoaa_id desc';
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -659,33 +654,6 @@ class Model_certificacion extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
-
-    /*========= DATOS DE ELIMINACIÓN CERTIFICACION ORIGINAL=========*/
-/*    public function get_datos_certificado_eliminado($cpoa_id){
-        $sql = 'select
-        ca.cpoa_id,
-        ca.cpoaa_id,
-        ca.cite as cite_edicion,
-        ca.justificacion as cite_justificacion,
-        ca.cpoaa_fecha as cite_fecha,
-        ca.cpoa_codigo as codigo_cert_anterior,
-        ca.cpoa_fecha as fecha_cert_anterior,
-        ca.cpoa_recomendacion as recomendacion_anterior,
-        ca.fun_id as fun_id_certpoa,
-        ca.tp_anulado as tipo_edicion,
-        cp.proy_id,
-        cp.aper_id,
-        cp.com_id,
-        cp.prod_id,
-        cp.sol_id,
-        cp.fun_id as fun_id_edicion
-                from certificacionpoa_anulado ca
-                Inner Join certificacionpoa as cp On cp.cpoa_id=ca.cpoa_id
-                where ca.cpoa_id='.$cpoa_id.'';
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
 
 
     /*========= CERTIFICACION ANULADO =========*/
@@ -737,452 +705,6 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
-
-    /*----- MODULO EVALUACION POA 2020 - UNIDAD ----*/
-    /*----- Suma grupo de Partida por defecto - Gasto Corriente ----*/
-/*    public function suma_grupo_partida_programado($aper_id,$grupo_partida){
-        $trimestre=0;
-        if($this->tmes==1){
-            $trimestre=3;
-        }
-        elseif ($this->tmes==2) {
-            $trimestre=6;
-        }
-        elseif($this->tmes==3){
-            $trimestre=9;
-        }
-        else{   
-            $trimestre=12;
-        }
-
-        $sql = 'select i.aper_id, SUM(t.ipm_fis) suma_partida
-                from insumos i
-                Inner Join partidas as p On p.par_id=i.par_id
-                Inner Join temporalidad_prog_insumo as t On t.ins_id=i.ins_id
-                where i.aper_id='.$aper_id.' and (t.mes_id>\'0\' and t.mes_id<='.$trimestre.') and t.g_id='.$this->gestion.' and p.par_depende=\''.$grupo_partida.'\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\'
-                group by i.aper_id';
-        $query = $this->db->query($sql);
-
-        return $query->result_array();
-    }*/
-
-    /*----- Suma monto certificado por unidad al trimestre vigente - Gasto Corriente ----*/
-/*    public function suma_monto_certificado_unidad($proy_id){
-        $trimestre=0;
-        if($this->tmes==1){
-            $trimestre=3;
-        }
-        elseif ($this->tmes==2) {
-            $trimestre=6;
-        }
-        elseif($this->tmes==3){
-            $trimestre=9;
-        }
-        else{   
-            $trimestre=12;
-        }
-
-        $sql = 'select cpoa.proy_id,SUM(t.ipm_fis) ppto_certificado
-                from certificacionpoa cpoa
-                Inner Join certificacionpoadetalle as cpoad On cpoad.cpoa_id=cpoa.cpoa_id
-                Inner Join insumos as i On i.ins_id=cpoad.ins_id
-                Inner Join partidas as par On par.par_id=i.par_id
-
-                Inner Join cert_temporalidad_prog_insumo as ct On ct.cpoad_id=cpoad.cpoad_id
-                Inner Join temporalidad_prog_insumo as t On t.tins_id=ct.tins_id
-
-
-                where cpoa.proy_id='.$proy_id.' and (t.mes_id>\'0\' and t.mes_id<='.$trimestre.') and t.g_id='.$this->gestion.' and cpoa.cpoa_estado!=\'3\' and  par.par_depende!=\'10000\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\'
-                group by cpoa.proy_id';
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-    /*----- Presupuesto total asignado por trimestre por unidad----*/
-/*    public function monto_total_programado_trimestre($aper_id){
-        $trimestre=0;
-        if($this->tmes==1){
-            $trimestre=3;
-        }
-        elseif ($this->tmes==2) {
-            $trimestre=6;
-        }
-        elseif($this->tmes==3){
-            $trimestre=9;
-        }
-        else{   
-            $trimestre=12;
-        }
-
-        $sql = 'select i.aper_id, SUM(t.ipm_fis) ppto_programado
-                from insumos i
-                Inner Join temporalidad_prog_insumo as t On t.ins_id=i.ins_id
-                where i.aper_id='.$aper_id.' and (t.mes_id>\'0\' and t.mes_id<='.$trimestre.') and t.g_id='.$this->gestion.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\'
-                group by i.aper_id';
-        $query = $this->db->query($sql);
-
-        return $query->result_array();
-    }*/
-
-    /*----- MODULO EVALUACION POA 2020 - NACIONAL ----*/
-    /*----- Suma grupo de Partida - Gasto Corriente,Proyecto de Inversion ----*/
-/*    public function suma_grupo_partida_programado_institucional($tp_id,$grupo_partida){
-        $trimestre=0;
-        if($this->tmes==1){
-            $trimestre=3;
-        }
-        elseif ($this->tmes==2) {
-            $trimestre=6;
-        }
-        elseif($this->tmes==3){
-            $trimestre=9;
-        }
-        elseif($this->tmes==4){  
-            $trimestre=12;
-        }
-
-        if($tp_id==1){
-            $sql = '
-                select SUM(i.ins_costo_total) suma_partida
-                from insumos i
-                Inner Join partidas as par On par.par_id=i.par_id
-
-                Inner Join aperturaproyectos as ap On ap.aper_id=i.aper_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                Inner Join _proyectos as p On ap.proy_id=p.proy_id
-
-                where p.tp_id=\'1\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and par.par_depende=\''.$grupo_partida.'\' and apg.aper_gestion='.$this->gestion.'';
-        }
-        else{
-            $sql = '
-                select SUM(t.ipm_fis) suma_partida
-                from insumos i
-                Inner Join partidas as par On par.par_id=i.par_id
-
-                Inner Join aperturaproyectos as ap On ap.aper_id=i.aper_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                Inner Join _proyectos as p On ap.proy_id=p.proy_id
-                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-                Inner Join uni_gestion as ug On ua.act_id=ug.act_id
-                Inner Join temporalidad_prog_insumo as t On t.ins_id=i.ins_id                
-
-                where i.ins_estado!=\'3\' and i.aper_id!=\'0\' and (t.mes_id>\'0\' and t.mes_id<='.$trimestre.') and t.g_id='.$this->gestion.' and par.par_depende=\''.$grupo_partida.'\' and apg.aper_gestion='.$this->gestion.' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.'';
-        }
-        
-        $query = $this->db->query($sql);
-
-        return $query->result_array();
-    }*/
-
-    /*----- MODULO EVALUACION POA 2020 - REGIONAL ----*/
-    /*----- Suma grupo de Partida - Gasto Corriente,Proyecto de Inversion ----*/
-/*    public function suma_grupo_partida_programado_por_regional($tp_id,$dep_id,$grupo_partida){
-        $trimestre=0;
-        if($this->tmes==1){
-            $trimestre=3;
-        }
-        elseif ($this->tmes==2) {
-            $trimestre=6;
-        }
-        elseif($this->tmes==3){
-            $trimestre=9;
-        }
-        elseif($this->tmes==4){  
-            $trimestre=12;
-        }
-
-        if($tp_id==1){
-            $sql = '
-                select p.dep_id, SUM(t.ipm_fis) suma_partida
-                from insumos i
-                Inner Join partidas as par On par.par_id=i.par_id
-
-                Inner Join aperturaproyectos as ap On ap.aper_id=i.aper_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                Inner Join _proyectos as p On ap.proy_id=p.proy_id
-                Inner Join temporalidad_prog_insumo as t On t.ins_id=i.ins_id                
-
-                where p.dep_id='.$dep_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and (t.mes_id>\'0\' and t.mes_id<='.$trimestre.') and t.g_id='.$this->gestion.' and par.par_depende=\''.$grupo_partida.'\' and apg.aper_gestion='.$this->gestion.' and p.tp_id=\'1\'
-                group by p.dep_id';
-        }
-        else{
-            $sql = '
-                select p.dep_id, SUM(t.ipm_fis) suma_partida
-                from insumos i
-                Inner Join partidas as par On par.par_id=i.par_id
-
-                Inner Join aperturaproyectos as ap On ap.aper_id=i.aper_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                Inner Join _proyectos as p On ap.proy_id=p.proy_id
-                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-                Inner Join uni_gestion as ug On ua.act_id=ug.act_id
-                Inner Join temporalidad_prog_insumo as t On t.ins_id=i.ins_id                
-
-                where p.dep_id='.$dep_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and (t.mes_id>\'0\' and t.mes_id<='.$trimestre.') and t.g_id='.$this->gestion.' and par.par_depende=\''.$grupo_partida.'\' and apg.aper_gestion='.$this->gestion.' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.'
-                group by p.dep_id';
-        }
-        
-        $query = $this->db->query($sql);
-
-        return $query->result_array();
-    }*/
-
-    /*----- MODULO EVALUACION POA 2020 - DISTRITAL, al trimestre ----*/
-    /*----- Suma grupo de Partida - Gasto Corriente,Proyecto de Inversion ----*/
-/*    public function suma_grupo_partida_programado_por_distrital($tp_id,$dist_id,$grupo_partida){
-        $trimestre=0;
-        if($this->tmes==1){
-            $trimestre=3;
-        }
-        elseif ($this->tmes==2) {
-            $trimestre=6;
-        }
-        elseif($this->tmes==3){
-            $trimestre=9;
-        }
-        elseif($this->tmes==4){  
-            $trimestre=12;
-        }
-
-        if($tp_id==1){ //// Proyecto de Inversion
-            $sql = '
-                select p.dist_id, SUM(t.ipm_fis) suma_partida
-                from insumos i
-                Inner Join partidas as par On par.par_id=i.par_id
-
-                Inner Join aperturaproyectos as ap On ap.aper_id=i.aper_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                Inner Join _proyectos as p On ap.proy_id=p.proy_id
-                Inner Join temporalidad_prog_insumo as t On t.ins_id=i.ins_id                
-
-                where p.dist_id='.$dist_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and (t.mes_id>\'0\' and t.mes_id<='.$trimestre.') and t.g_id='.$this->gestion.' and par.par_depende=\''.$grupo_partida.'\' and apg.aper_gestion='.$this->gestion.' and p.tp_id=\'1\'
-                group by p.dist_id';
-        }
-        else{ //// Gasto Corriente
-            $sql = '
-                select p.dist_id, SUM(t.ipm_fis) suma_partida
-                from insumos i
-                Inner Join partidas as par On par.par_id=i.par_id
-
-                Inner Join aperturaproyectos as ap On ap.aper_id=i.aper_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                Inner Join _proyectos as p On ap.proy_id=p.proy_id
-                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-                Inner Join uni_gestion as ug On ua.act_id=ug.act_id
-                Inner Join temporalidad_prog_insumo as t On t.ins_id=i.ins_id                
-
-                where p.dist_id='.$dist_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and (t.mes_id>\'0\' and t.mes_id<='.$trimestre.') and t.g_id='.$this->gestion.' and par.par_depende=\''.$grupo_partida.'\' and apg.aper_gestion='.$this->gestion.' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.' and p.tp_id=\'1\'
-                group by p.dist_id';
-        }
-    
-        $query = $this->db->query($sql);
-
-        return $query->result_array();
-    }
-*/
-
-    ///// MONTO CERTIFICADO INSITUTCIONAL, REGIONAL, DISTRITAL, UNIDAD
-    /*----- Suma monto certificado por unidad - Gasto Corriente ----*/
-/*    public function suma_monto_certificado_institucional($tp_id){
-        $trimestre=0;
-        if($this->tmes==1){
-            $trimestre=3;
-        }
-        elseif ($this->tmes==2) {
-            $trimestre=6;
-        }
-        elseif($this->tmes==3){
-            $trimestre=9;
-        }
-        elseif($this->tmes==4){  
-            $trimestre=12;
-        }
-
-        if($tp_id==1){
-            $sql = '
-            select SUM(t.ipm_fis) ppto_certificado
-            from certificacionpoa cpoa
-
-            Inner Join _proyectos as p On cpoa.proy_id=p.proy_id
-            Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
-            Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                        
-            Inner Join certificacionpoadetalle as cpoad On cpoad.cpoa_id=cpoa.cpoa_id
-            Inner Join insumos as i On i.ins_id=cpoad.ins_id
-            Inner Join partidas as par On par.par_id=i.par_id
-
-            Inner Join cert_temporalidad_prog_insumo as ct On ct.cpoad_id=cpoad.cpoad_id
-            Inner Join temporalidad_prog_insumo as t On t.tins_id=ct.tins_id
-
-            where (t.mes_id>\'0\' and t.mes_id<='.$trimestre.') and t.g_id='.$this->gestion.' and cpoa.cpoa_estado!=\'3\' and  par.par_depende!=\'10000\'
-            and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and p.tp_id=\'1\' ';
-        }
-        else{
-            $sql = '
-            select SUM(t.ipm_fis) ppto_certificado
-            from certificacionpoa cpoa
-
-            Inner Join _proyectos as p On cpoa.proy_id=p.proy_id
-            Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
-            Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-            
-            Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-            Inner Join uni_gestion as ug On ua.act_id=ug.act_id
-                        
-            Inner Join certificacionpoadetalle as cpoad On cpoad.cpoa_id=cpoa.cpoa_id
-            Inner Join insumos as i On i.ins_id=cpoad.ins_id
-            Inner Join partidas as par On par.par_id=i.par_id
-
-            Inner Join cert_temporalidad_prog_insumo as ct On ct.cpoad_id=cpoad.cpoad_id
-            Inner Join temporalidad_prog_insumo as t On t.tins_id=ct.tins_id
-
-            where (t.mes_id>\'0\' and t.mes_id<='.$trimestre.') and t.g_id='.$this->gestion.' and cpoa.cpoa_estado!=\'3\' and  par.par_depende!=\'10000\' and ua.act_estado!=\'3\'
-            and ug.g_id='.$this->gestion.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and p.tp_id=\'4\'';
-        }
-        
-        $query = $this->db->query($sql);
-
-        return $query->result_array();
-    }*/
-
-
-    /*----- Suma monto certificado por unidad - Gasto Corriente al trimestre ----*/
-/*    public function suma_monto_certificado_por_regional($tp_id,$dep_id){
-        $trimestre=0;
-        if($this->tmes==1){
-            $trimestre=3;
-        }
-        elseif ($this->tmes==2) {
-            $trimestre=6;
-        }
-        elseif($this->tmes==3){
-            $trimestre=9;
-        }
-        else{   
-            $trimestre=12;
-        }
-
-        if($tp_id==1){
-            $sql = '
-            select p.dep_id,SUM(t.ipm_fis) ppto_certificado
-            from certificacionpoa cpoa
-
-            Inner Join _proyectos as p On cpoa.proy_id=p.proy_id
-            Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
-            Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                        
-            Inner Join certificacionpoadetalle as cpoad On cpoad.cpoa_id=cpoa.cpoa_id
-            Inner Join insumos as i On i.ins_id=cpoad.ins_id
-            Inner Join partidas as par On par.par_id=i.par_id
-
-            Inner Join cert_temporalidad_prog_insumo as ct On ct.cpoad_id=cpoad.cpoad_id
-            Inner Join temporalidad_prog_insumo as t On t.tins_id=ct.tins_id
-
-            where p.dep_id='.$dep_id.' and (t.mes_id>\'0\' and t.mes_id<='.$trimestre.') and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and  t.g_id='.$this->gestion.' and cpoa.cpoa_estado!=\'3\' and  par.par_depende!=\'10000\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and p.tp_id=\'1\'
-            group by p.dep_id';
-        }
-        else{
-            $sql = '
-            select p.dep_id,SUM(t.ipm_fis) ppto_certificado
-            from certificacionpoa cpoa
-
-            Inner Join _proyectos as p On cpoa.proy_id=p.proy_id
-            Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-            Inner Join uni_gestion as ug On ua.act_id=ug.act_id
-                        
-            Inner Join certificacionpoadetalle as cpoad On cpoad.cpoa_id=cpoa.cpoa_id
-            Inner Join insumos as i On i.ins_id=cpoad.ins_id
-            Inner Join partidas as par On par.par_id=i.par_id
-
-            Inner Join cert_temporalidad_prog_insumo as ct On ct.cpoad_id=cpoad.cpoad_id
-            Inner Join temporalidad_prog_insumo as t On t.tins_id=ct.tins_id
-
-            where p.dep_id='.$dep_id.' and (t.mes_id>\'0\' and t.mes_id<='.$trimestre.') and t.g_id='.$this->gestion.' and cpoa.cpoa_estado!=\'3\' and  par.par_depende!=\'10000\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and p.tp_id=\'4\'
-            group by p.dep_id';
-        }
-        
-        $query = $this->db->query($sql);
-
-        return $query->result_array();
-    }*/
-
-    /*----- Suma monto certificado por unidad - Gasto Corriente, al trimestre vigente ----*/
-/*    public function suma_monto_certificado_por_distrital($tp_id,$dist_id){
-        $trimestre=0;
-        if($this->tmes==1){
-            $trimestre=3;
-        }
-        elseif ($this->tmes==2) {
-            $trimestre=6;
-        }
-        elseif($this->tmes==3){
-            $trimestre=9;
-        }
-        else{   
-            $trimestre=12;
-        }
-
-        if($tp_id==1){ //// Proyecto de Inversion
-            $sql = '
-            select p.dist_id,SUM(t.ipm_fis) ppto_certificado
-            from certificacionpoa cpoa
-
-            Inner Join _proyectos as p On cpoa.proy_id=p.proy_id
-            Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
-            Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                        
-            Inner Join certificacionpoadetalle as cpoad On cpoad.cpoa_id=cpoa.cpoa_id
-            Inner Join insumos as i On i.ins_id=cpoad.ins_id
-            Inner Join partidas as par On par.par_id=i.par_id
-
-            Inner Join cert_temporalidad_prog_insumo as ct On ct.cpoad_id=cpoad.cpoad_id
-            Inner Join temporalidad_prog_insumo as t On t.tins_id=ct.tins_id
-
-            where p.dist_id='.$dist_id.' and (t.mes_id>\'0\' and t.mes_id<='.$trimestre.') and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and  t.g_id='.$this->gestion.' and cpoa.cpoa_estado!=\'3\' and  par.par_depende!=\'10000\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and p.tp_id=\'1\'
-            group by p.dist_id';
-        }
-        else{ //// Gasto Corriente
-            $sql = '
-            select p.dist_id,SUM(t.ipm_fis) ppto_certificado
-            from certificacionpoa cpoa
-
-            Inner Join _proyectos as p On cpoa.proy_id=p.proy_id
-            Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-            Inner Join uni_gestion as ug On ua.act_id=ug.act_id
-                        
-            Inner Join certificacionpoadetalle as cpoad On cpoad.cpoa_id=cpoa.cpoa_id
-            Inner Join insumos as i On i.ins_id=cpoad.ins_id
-            Inner Join partidas as par On par.par_id=i.par_id
-
-            Inner Join cert_temporalidad_prog_insumo as ct On ct.cpoad_id=cpoad.cpoad_id
-            Inner Join temporalidad_prog_insumo as t On t.tins_id=ct.tins_id
-
-            where p.dist_id='.$dist_id.' and (t.mes_id>\'0\' and t.mes_id<='.$trimestre.') and t.g_id='.$this->gestion.' and cpoa.cpoa_estado!=\'3\' and  par.par_depende!=\'10000\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and p.tp_id=\'4\'
-            group by p.dist_id';
-        }
-        
-        $query = $this->db->query($sql);
-
-        return $query->result_array();
-    }*/
-
-
-
-////=========================== PARA PODER CORREGIR
-    /*----- LISTA DE REQUERIMIENTOS ----*/
-/*    public function list_requerimientos($dep_id){
-        $sql = '
-            select p.*,i.*
-            from insumos i
-
-            Inner Join aperturaprogramatica as apg On apg.aper_id=i.aper_id
-            Inner Join aperturaproyectos as ap On ap.aper_id=i.aper_id
-            Inner Join _proyectos as p On p.proy_id=ap.proy_id
-            where p.dep_id='.$dep_id.' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\'';        
-        $query = $this->db->query($sql);
-
-        return $query->result_array();
-    }*/
 
     /*----- VERIFICA SI UN REQUERIMIENTO ESTA CERTIFICADO ----*/
     public function verif_insumo_certificados($ins_id){

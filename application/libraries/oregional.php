@@ -139,6 +139,19 @@ class Oregional extends CI_Controller{
                       $tabla.='        
                     </select>
                   </td>
+                  <td>
+                    <select class="form-control" class="form-control" onchange="doSelectPriori2(this.value,'.$row_or['or_id'].','.$row['dep_id'].');"> title="SELECCIONE TIPO DE PRIORIDAD">';
+                      if($row_or['or_priorizado2']==0){
+                        $tabla.=' <option value="0" selected>NO</option>
+                                  <option value="1">SI</option>';
+                      }
+                      else{
+                        $tabla.=' <option value="0">NO</option>
+                                  <option value="1" selected>SI</option>';
+                      }
+                      $tabla.='        
+                    </select>
+                  </td>
                   <td>';
                   if($this->dep_id==$row['dep_id'] || $this->fun_id==399 || $this->fun_id==401 || $this->fun_id==418){
                     $tabla.='<a href="'.site_url("").'/me/update_oregional/'.$row_or['or_id'].'" title="MODIFICAR DATOS" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a>';

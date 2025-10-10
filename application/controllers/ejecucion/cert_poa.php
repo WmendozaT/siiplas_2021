@@ -61,6 +61,7 @@ class Cert_poa extends CI_Controller {
 
     /*------ LISTA DE CERTIFICACIONES POA REGISTRADOS -------*/
     public function menu_certificacion_poa(){
+
       if($this->rolfunn(3)){
         $data['menu']=$this->certificacionpoa->menu(4);
         $data['resp']=$this->session->userdata('funcionario');
@@ -105,17 +106,7 @@ class Cert_poa extends CI_Controller {
             $data['cuerpo']='
                 <input name="base" type="hidden" value="'.base_url().'">
                 <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="jarviswidget jarviswidget-color-darken" >
-                      <header>
-                          <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                          <h2 class="font-md"><strong>MIS CERTIFICACIONES POA - '.$this->gestion.'</strong></h2>  
-                      </header>
-                        <div>
-                            <div class="widget-body no-padding">
-                              '.$this->list_certpoas().'
-                            </div>
-                        </div>
-                    </div>
+                    '.$this->list_certpoas().'
                 </article>';
             //$this->load->view('admin/ejecucion/certificacion_poa/list_certificaciones_poa', $data);
           }
@@ -239,7 +230,7 @@ class Cert_poa extends CI_Controller {
     }
 
 
-    /*-- LISTA DE CERTIFICACIONES POAS 2020 (Regional-Distrital)--*/
+    /*-- LISTA DE CERTIFICACIONES POAS 2025 (Regional-Distrital)--*/
     public function list_certpoas(){
       $tabla='        
           <style>
@@ -256,37 +247,108 @@ class Cert_poa extends CI_Controller {
             }
           </style>';
           $certificados = $this->model_certificacion->list_certificados();
+          $certificados_anulados = $this->model_certificacion->list_certificados_anulados();
           $tabla.='
           <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>
-            <table id="dt_basic" class="table table-bordered" style="width:100%;" border=1>
-            <thead>
-              <tr style="background-color: #66b2e8">
-                  <th style="width:1%;"></th>
-                  <th style="width:10%;">C&Oacute;DIGO CERTIFICACIÓN POA</th>
-                  <th style="width:10%;">CITE </th>
-                  <th style="width:10%;">CITE FECHA </th>
-                  <th style="width:10%;">PROGRAMA</th>
-                  <th style="width:20%;">DESCRIPCI&Oacute;N</th>
-                  <th style="width:10%;">UNIDAD RESPONSABLE</th>
-                  <th style="width:5%;">GESTI&Oacute;N</th>
-                  <th style="width:7%;" title="EDITAR CERTIFICACI&Oacute;N">MODIFICAR CERTIFICACIÓN</th>
-                  <th style="width:7%;" title="ANULAR CERTIFICACI&Oacute;N">ANULAR CERTIFICACIÓN</th>
-                  <th style="width:5%;">VER CERTIFICADO POA</th>';
-                  if($this->tp_adm==1){
-                    $tabla.='
-                    <th></th>
-                    <th></th>';
-                  }
-                  $tabla.='
-              </tr>
-            </thead>
-            '.$this->lista_certificacionespoa($certificados).'
-        </table>';
+              <div class="jarviswidget" id="wid-id-8" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+              <header>
+                <h2></h2>
+                <ul class="nav nav-tabs pull-right in">
+                  <li class="active">
+                    <a data-toggle="tab" href="#hb1"> <i class="fa fa-lg fa-arrow-circle-o-down"></i> <span class="hidden-mobile hidden-tablet"><b> MIS CERTIFICACIONES POA </b></span></a>
+                  </li>
+                  <li>
+                    <a data-toggle="tab" href="#hb2" style="color:red;"> <i class="fa fa-lg fa-arrow-circle-o-up"></i> <span class="hidden-mobile hidden-tablet"><b>MIS CERTIFICACIONES ANULADAS</b></span> </a>
+                  </li>
+                </ul>
+              </header>
+            <div>
+    
+            <div class="jarviswidget-editbox"></div>
+              <div class="widget-body">
+                <div class="tab-content">
+                <input name="base" type="hidden" value="'.base_url().'">
+                  <div class="tab-pane active" id="hb1">
+                    <div class="table-responsive">  
+                      <table id="dt_basic" class="table table-bordered" style="width:100%;">
+                        <thead>
+                          <tr style="background-color: #66b2e8">
+                              <th style="width:1%;"></th>
+                              <th style="width:10%;">C&Oacute;DIGO CERTIFICACIÓN POA</th>
+                              <th style="width:10%;">CITE </th>
+                              <th style="width:10%;">CITE FECHA </th>
+                              <th style="width:10%;">PROGRAMA</th>
+                              <th style="width:20%;">DESCRIPCI&Oacute;N</th>
+                              <th style="width:10%;">UNIDAD RESPONSABLE</th>
+                              <th style="width:5%;">GESTI&Oacute;N</th>
+                              <th style="width:7%;" title="EDITAR CERTIFICACI&Oacute;N">MODIFICAR CERTIFICACIÓN</th>
+                              <th style="width:7%;" title="ANULAR CERTIFICACI&Oacute;N">ANULAR CERTIFICACIÓN</th>
+                              <th style="width:5%;">VER CERTIFICADO POA</th>';
+                              if($this->tp_adm==1){
+                                $tabla.='
+                                <th></th>
+                                <th></th>';
+                              }
+                              $tabla.='
+                          </tr>
+                        </thead>
+                        '.$this->lista_certificacionespoa($certificados).'
+                      </table>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="hb2">
+                    <div class="table-responsive">
+                      <table id="dt_basic2" class="table2 table-bordered" style="width:100%;">
+                        <thead>
+                          <tr style="height:40px;" bgcolor="#f6f6f6">
+                            <th style="width:1%;">#</th>
+                            <th style="width:10%;">CITE</th>
+                            <th style="width:10%;">FECHA DE ANULACIÓN</th>
+                            <th style="width:50%;">JUSTIFICACIÓN</th>
+                            <th style="width:10%;">CODIGO CERTIFICACI&Oacute;N POA</th>
+                            <th style="width:10%;">RESPONSABLE DE LA ANULACION</th>
+                            <th style="width:10%;"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        '.$this->lista_certificacionespoa_anulados($certificados_anulados).'
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>';
 
       return $tabla;
     }
 
-    public function lista_certificacionespoa($certificados){
+
+    /// LISTA DE CERTIFICACIONES POA anulado
+    public function lista_certificacionespoa_anulados($certificados){
+      $tabla='';
+          $nro=0;
+          foreach ($certificados as $row){
+            $nro++;
+            $tabla.='
+            <tr style="height:40px;" bgcolor="#f3dfdf">
+              <td style="width:1%; text-align:center">'.$nro.'</td>
+              <td style="width:10%; font-size:12px; font-family: Arial;"><b>'.$row['cite'].'</></td>
+              <td style="width:10%; font-size:12px; font-family: Arial;"><b>'.date('d-m-Y',strtotime($row['cpoaa_fecha'])).'</b></td>
+              <td style="width:50%;font-family: Arial;">'.$row['justificacion'].'</td>
+              <td style="width:10%; font-size:13px; font-family: Arial;"><b>'.$row['cpoa_codigo'].'</b></td>
+              <td style="width:10%;font-family: Arial;">'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>
+              <td style="width:10%; text-align:center"><a href="javascript:abreVentana(\''. site_url("").'/cert/rep_cert_poa_anulado/'.$row['cpoa_id'].'\');" title="CERTIFICADO POA" class="btn btn-danger">Ver Certificado Anulado</a></td>
+            </tr>';
+          }
+          $tabla.='';
+
+      return $tabla;
+    }
+
+    //// LISTA DE CERTIFICACIONES 
+     public function lista_certificacionespoa($certificados){
       $tabla='';
       $tabla.='
        <tbody>';
@@ -315,7 +377,7 @@ class Cert_poa extends CI_Controller {
                             $tabla.=$row['proy_nombre'];
                           }
                           else{
-                            $tabla.=$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'];
+                            $tabla.=$row['tipo'].' '.$row['proy_nombre'].' '.$row['abrev'];
                           }
                         $tabla .='
                         </td>
@@ -382,31 +444,6 @@ class Cert_poa extends CI_Controller {
       return $tabla;
     }
 
-
-    /*------------------------------------- MENU -----------------------------------*/
-/*    function menu($mod){
-        $enlaces=$this->menu_modelo->get_Modulos($mod);
-        for($i=0;$i<count($enlaces);$i++){
-          $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
-        }
-
-        $tabla ='';
-        for($i=0;$i<count($enlaces);$i++){
-            if(count($subenlaces[$enlaces[$i]['o_child']])>0){
-                $tabla .='<li>';
-                    $tabla .='<a href="#">';
-                        $tabla .='<i class="'.$enlaces[$i]['o_image'].'"></i> <span class="menu-item-parent">'.$enlaces[$i]['o_titulo'].'</span></a>';    
-                        $tabla .='<ul>';    
-                            foreach ($subenlaces[$enlaces[$i]['o_child']] as $item) {
-                            $tabla .='<li><a href="'.base_url($item['o_url']).'">'.$item['o_titulo'].'</a></li>';
-                        }
-                        $tabla .='</ul>';
-                $tabla .='</li>';
-            }
-        }
-
-        return $tabla;
-    }*/
     /*=============================================================================================*/
 
     /*---- Obtiene Datos de la Certificacion 2020 (en uso) ---*/

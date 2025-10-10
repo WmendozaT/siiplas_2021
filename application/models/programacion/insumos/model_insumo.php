@@ -391,7 +391,31 @@ class Model_insumo extends CI_Model{
 
     // lista de requerimientos alineados a la operacion y a la subactividad
     function list_requerimientos_operacion_procesos($com_id){
-        $sql = 'select 
+        $sql = ' select 
+                p.com_id,
+                p.prod_cod,
+                 i.ins_id,
+                i.ins_codigo,
+                i.ins_cant_requerida,
+                i.ins_costo_unitario,
+                i.ins_costo_total,
+                i.ins_detalle,
+                i.ins_unidad_medida,
+                i.ins_gestion,
+                i.ins_observacion,
+                i.ins_monto_certificado,
+                i.ins_tipo_modificacion,
+                par.par_id,
+                par.par_codigo,
+                par.par_nombre
+                from _productos p
+                Inner Join _insumoproducto as ip On p.prod_id=ip.prod_id
+                Inner Join insumos as i On i.ins_id=ip.ins_id
+                Inner Join partidas as par On par.par_id=i.par_id
+                where p.com_id='.$com_id.' and p.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
+                order by p.prod_cod,par.par_codigo,i.ins_id asc';
+
+        /*$sql = 'select 
                 c.com_id,
                 c.pfec_id,
                 i.form4_cod as prod_cod,
@@ -413,7 +437,7 @@ class Model_insumo extends CI_Model{
                 Inner Join insumos as i On c.com_id=i.com_id
                 Inner Join partidas as par On par.par_id=i.par_id
                 where c.com_id='.$com_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.' 
-                order by i.form4_cod,par.par_codigo,i.ins_id asc';
+                order by i.form4_cod,par.par_codigo,i.ins_id asc';*/
 
         $query = $this->db->query($sql);
         return $query->result_array();

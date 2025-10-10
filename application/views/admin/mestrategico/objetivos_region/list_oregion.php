@@ -256,6 +256,26 @@
 			      }
 			    });
 			}
+
+			function doSelectPriori2(select_og_id,or_id,dep_id) {
+	//			alert(select_og_id+' - '+or_id+' - '+dep_id)
+					alertify.confirm("DESEA CAMBIAR EL TIPO DE PRIORIZACIÓN ?", function (a) {
+			      if (a) {
+			      url = "<?php echo site_url().'/mestrategico/cobjetivo_regional/update_priorizar2_form2';?>";
+			      $.ajax({
+			          type: "post",
+			          url: url,
+			          data:{select_og_id:select_og_id,or_id:or_id,dep_id:dep_id},
+			              success: function (data) {
+			              alertify.success("EXITO !!!");
+			              //window.location.reload(true);
+			          }
+			      });
+			      } else {
+			          alertify.error("OPCI\u00D3N CANCELADA");
+			      }
+			    });
+			}
 		</script>
 
 		<script type="text/javascript">

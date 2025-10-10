@@ -108,6 +108,30 @@ class Cobjetivo_regional extends CI_Controller {
       }
     }
 
+    /*------ CAMBIAR PRIORIZACION 2---------*/
+    function update_priorizar2_form2(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+          $this->form_validation->set_rules('select_og_id', 'Objetivo Regional', 'required|trim');
+          $this->form_validation->set_message('required', 'El campo es es obligatorio');
+        
+          $post = $this->input->post();
+          $select_og_id= $this->security->xss_clean($post['select_og_id']); // priori
+          $or_id= $this->security->xss_clean($post['or_id']); /// or_id
+          $dep_id= $this->security->xss_clean($post['dep_id']); /// dep_id
+          
+
+          $update_form2 = array(
+            'or_priorizado2' => $select_og_id,
+          );
+          $this->db->where('or_id', $or_id);
+          $this->db->update('objetivos_regionales', $update_form2);
+    
+      }else{
+          show_404();
+      }
+    }
+
+
     /*---------- FORMULARIO UPDATE OBJ. REGIONAL ------------*/
     public function form_update_oregional($or_id){
       $data['menu']=$this->oregional->menu(1);

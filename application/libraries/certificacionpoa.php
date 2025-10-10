@@ -123,11 +123,12 @@ class Certificacionpoa extends CI_Controller{
           $nro_cdep='0';
         }
 
-        if($this->gestion>2024){
-          $codigo='DNP.'.$nro_cdep.''.$nro_cpoa.'-'.$get_cpoa[0]['adm'].'.'.$get_cpoa[0]['abrev']; /// 2025
+        if($this->gestion>2025){
+          $codigo='DNP.'.$get_cpoa[0]['adm'].'.'.$get_cpoa[0]['abrev'].''.$nro_cdep.''.$nro_cpoa; /// 2026
         }
         else{
-          $codigo='CPOA.'.$nro_cdep.''.$nro_cpoa.'-'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev']; /// 2024
+          $codigo='DNP.'.$nro_cdep.''.$nro_cpoa.'-'.$get_cpoa[0]['adm'].'.'.$get_cpoa[0]['abrev']; /// 2025
+          //$codigo='CPOA.'.$nro_cdep.''.$nro_cpoa.'-'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev']; /// 2024
         }
 
         if(count($this->model_certificacion->get_codigo_certpoa($codigo))==0){
@@ -1327,6 +1328,11 @@ class Certificacionpoa extends CI_Controller{
 
   /*-- Datos generales Unidad --*/
   public function datos_unidad_certpoa($certpoa){
+    $uni_resp='';
+    if($certpoa[0]['por_id']==1){
+      $uni_resp=' / '.$certpoa[0]['tp_subactividad'].' '.$certpoa[0]['unidad_responsable'];
+    }
+
     $tabla='';
     $tabla.='
         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
@@ -1380,7 +1386,7 @@ class Certificacionpoa extends CI_Controller{
                 </td>
                 <td style="width:80%;">
                     <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
-                        <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['aper_programa'].''.$certpoa[0]['aper_proyecto'].''.$certpoa[0]['aper_actividad'].' - '.strtoupper ($certpoa[0]['act_descripcion']).' '.$certpoa[0]['abrev'].'</td></tr>
+                        <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['aper_programa'].''.$certpoa[0]['aper_proyecto'].''.$certpoa[0]['aper_actividad'].' - '.strtoupper ($certpoa[0]['act_descripcion']).' '.$certpoa[0]['abrev'].' '.$uni_resp.'</td></tr>
                     </table>
                 </td>
               </tr>';
@@ -1486,7 +1492,7 @@ class Certificacionpoa extends CI_Controller{
             </table>
           </section>
           <section>
-            <label class="label">RECOMENDACION</label>
+            <label class="label">OBSERVACIÓN/RECOMENDACIÓN</label>
             <label class="textarea">
               <i class="icon-append fa fa-comment"></i>
               <textarea rows="4" name="recomendacion" id="recomendacion"></textarea>

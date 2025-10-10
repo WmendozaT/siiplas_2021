@@ -241,7 +241,7 @@ class Cptto_poa extends CI_Controller {
                   $tabla.='</td>';
                   $tabla.='<td align=center><b>'.$row['da'].'</b></td>';
                   $tabla.='<td align=center><b>'.$row['ue'].'</b></td>';
-                  $tabla.='<td><center>'.$row['prog'].' '.$row['proy'].' '.$row['act'].'</center></td>';
+                  $tabla.='<td><center>'.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].'</center></td>';
                   $tabla.='<td style="font-size: 8pt;"><b>'.$row['tipo'].' '.$row['actividad'].' '.$row['abrev'].'</b></td>';
                   $tabla.='<td>'.strtoupper($row['dep_departamento']).'</td>';
                   $tabla.='<td>'.strtoupper($row['dist_distrital']).'</td>';
