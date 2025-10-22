@@ -1707,6 +1707,7 @@ class Cseguimiento extends CI_Controller {
       if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           $dist_id = $_POST['value'];
           $tabla=$this->listado_unidades($dist_id,0);
+       
           $reporte='
           <a href="javascript:abreVentana2(\''.site_url("").'/seguimiento_a_unidades/'.$dist_id.'\');" title="REPORTE" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="20"/></a>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>';
@@ -1846,7 +1847,7 @@ class Cseguimiento extends CI_Controller {
             $tabla.='
             <tr bgcolor='.$color.'>
               <td style="font-size:12px; text-align:center;"><b>'.$nro.'</b></td>
-              <td style="font-size:12px;"><b>'.$rowp['prog'].' '.$rowp['proy'].' '.$rowp['act'].'</b></td>
+              <td style="font-size:12px;"><b>'.$rowp['aper_programa'].' '.$rowp['aper_proyecto'].' '.$rowp['aper_actividad'].'</b></td>
               <td style="font-size:10.5px;">'.$rowp['tipo'].' '.$rowp['actividad'].' - '.$rowp['abrev'].'</td>
               <td>'.$rowp['tipo_subactividad'].' '.$rowp['serv_descripcion'].'</td>
               <td><b>'.$rowp['fun_usuario'].'</b></td>
@@ -1874,7 +1875,7 @@ class Cseguimiento extends CI_Controller {
             $tabla.='
             <tr bgcolor='.$color.'>
               <td style="font-size:12px; text-align:center;"><b>'.$nro.'</b></td>
-              <td style="font-size:12px;"><b>'.$rowp['prog'].' '.$rowp['proy'].' '.$rowp['act'].'</b></td>
+              <td style="font-size:12px;"><b>'.$rowp['aper_programa'].' '.$rowp['aper_proyecto'].' '.$rowp['aper_actividad'].'</b></td>
               <td style="font-size:10.5px;">'.$rowp['tipo'].' '.$rowp['actividad'].' - '.$rowp['abrev'].'</td>
               <td>'.$rowp['com_componente'].'</td>
               <td><b>'.$rowp['dato_ingreso'].'</b></td>

@@ -58,14 +58,14 @@ class reportes_evaluacionpoa extends CI_Controller{
               <th style="width:10%;">ACT. NO CUMP.</th>
               <th style="width:10%;">% CUMPLIMIENTO</th>
               <th style="width:10%;">% NO CUMPLIDAS</th>
-              <th style="width:10%;">% EJEC. PPTO.</th>
+              <th style="width:10%;"></th>
             </tr>
           </thead>
           <tbody>';
           $nro=0; $sum_cert=0;$sum_asig=0;
           foreach($unidades as $row){
             $eficacia=$this->eficacia_por_unidad($row['proy_id']); /// Eficacia
-            $economia=$this->economia_por_unidad($row['aper_id'],$row['proy_id']); /// Economia
+            //$economia=$this->economia_por_unidad($row['aper_id'],$row['proy_id']); /// Economia
 
             $nro++;
             $tabla.='<tr style="font-size: 9px;" >';
@@ -77,7 +77,7 @@ class reportes_evaluacionpoa extends CI_Controller{
             $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[4][$this->tmes].'</b></td>';
             $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[5][$this->tmes].'%</b></td>';
             $tabla.='<td style="width:10%;" align=right><b>'.(100-$eficacia[5][$this->tmes]).'%</b></td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$economia[3].'%</b></td>';
+            $tabla.='<td style="width:10%;" align=right></td>';
             $tabla.='</tr>';
           }
       $tabla.='
@@ -92,51 +92,82 @@ class reportes_evaluacionpoa extends CI_Controller{
     public function pdf_lista_parametro_cumplimiento_regional(){
       $tabla='';
       $regionales=$this->model_proyecto->list_departamentos();
+      $distritales=$this->model_proyecto->lista_distritales();
       $eficacia_nacional=$this->tabla_regresion_lineal_nacional(); /// Eficacia
        $tabla.='
-        <div style="font-size: 13px;font-family: Arial;height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DETALLE DE (%) CUMPLIMIENTO POR D.A.</div>
+        <div style="font-size: 22px;font-family: Arial;height:20px;text-align:center"><b>&nbsp;&nbsp;(%) CUMPLIMIENTO POA INSTITUCIONAL : '.$eficacia_nacional[5][$this->tmes].'%</b></div><br>
+        <div style="font-size: 13px;font-family: Arial;height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Detalle de Cumplimiento POA por Regional</div>
         <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
          <thead>
             <tr style="font-size: 10px;" align=center bgcolor="#f8f2f2">
-              <th style="width:2%;height:15px;">#</th>
-              <th style="width:20%;">DIRECCIÓN ADMINISTRATIVA</th>
+              <th style="width:2%;height:17px;">#</th>
+              <th style="width:30%;">REGIONAL</th>
               <th style="width:12%;">ACT. PROG.</th>
               <th style="width:12%;">ACT. CUMP.</th>
               <th style="width:12%;">ACT. NO CUMP.</th>
               <th style="width:12%;">% CUMP.</th>
               <th style="width:12%;">% NO CUMP.</th>
-              <th style="width:12%;">% CERT. POA</th>
             </tr>
           </thead>
           <tbody>';
           $nro=0;
           foreach($regionales as $row){
             $eficacia=$this->eficacia_por_regional($row['dep_id']); /// Eficacia
-            $economia=$this->economia_por_regional($row['dep_id']); /// Economia
-          //  $eficiencia=$this->eficiencia_por_regional($eficacia[5][$this->tmes],$economia[3]); /// Eficiencia
             $nro++;
             $tabla.='<tr style="font-size: 10px;">';
-            $tabla.='<td style="width:2%;height:10px;" align=center>'.$nro.'</td>';
-            $tabla.='<td style="width:20%;">'.strtoupper($row['dep_departamento']).'</td>';
+            $tabla.='<td style="width:2%;height:14px;" align=center>'.$nro.'</td>';
+            $tabla.='<td style="width:30%;">'.strtoupper($row['dep_departamento']).'</td>';
             $tabla.='<td style="width:12%;" align=right>'.$eficacia[2][$this->tmes].'</td>';
             $tabla.='<td style="width:12%;" align=right>'.$eficacia[3][$this->tmes].'</td>';
             $tabla.='<td style="width:12%;" align=right>'.$eficacia[4][$this->tmes].'</td>';
             $tabla.='<td style="width:12%;" align=right><b>'.$eficacia[5][$this->tmes].'%</b></td>';
             $tabla.='<td style="width:12%;" align=right><b>'.(100-$eficacia[5][$this->tmes]).'%</b></td>';
-            $tabla.='<td style="width:12%;" align=right><b>'.$economia[3].'%</b></td>';
             $tabla.='</tr>';
           }
       $tabla.='
           </tbody>
         </table><br><br>
-        <div style="font-size: 22px;font-family: Arial;height:20px;"><b>&nbsp;&nbsp;(%) CUMPLIMIENTO A NIVEL INSTITUCIONAL : '.$eficacia_nacional[5][$this->tmes].'%</b></div>';
+        
+
+        <br><br>
+        <div style="font-size: 13px;font-family: Arial;height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Detalle de Cumplimiento POA por Unidad Ejecutora</div>
+        <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
+         <thead>
+            <tr style="font-size: 11px;" align=center bgcolor="#f8f2f2">
+              <th style="width:2%;height:15px;">#</th>
+              <th style="width:30%;">UNIDAD EJECUTORA</th>
+              <th style="width:12%;">ACT. PROG.</th>
+              <th style="width:12%;">ACT. CUMP.</th>
+              <th style="width:12%;">ACT. NO CUMP.</th>
+              <th style="width:12%;">% CUMP.</th>
+              <th style="width:12%;">% NO CUMP.</th>
+            </tr>
+          </thead>
+          <tbody>';
+          $nro=0;
+          foreach($distritales as $row){
+            $eficacia=$this->eficacia_por_distrital($row['dist_id']); /// Eficacia
+            $nro++;
+            $tabla.='<tr style="font-size: 10px;">';
+            $tabla.='<td style="width:2%;height:13px;" align=center>'.$nro.'</td>';
+            $tabla.='<td style="width:30%;">'.strtoupper($row['dist_distrital']).'</td>';
+            $tabla.='<td style="width:12%;" align=right>'.$eficacia[2][$this->tmes].'</td>';
+            $tabla.='<td style="width:12%;" align=right>'.$eficacia[3][$this->tmes].'</td>';
+            $tabla.='<td style="width:12%;" align=right>'.$eficacia[4][$this->tmes].'</td>';
+            $tabla.='<td style="width:12%;" align=right><b>'.$eficacia[5][$this->tmes].'%</b></td>';
+            $tabla.='<td style="width:12%;" align=right><b>'.(100-$eficacia[5][$this->tmes]).'%</b></td>';
+            $tabla.='</tr>';
+          }
+      $tabla.='
+          </tbody>
+        </table>';
 
       return $tabla;
     }
 
 
 
-    /*------ REGRESIÓN LINEAL PROG - CUMPLIDO 2020 ACUMULADO AL TRIMESTRE -------*/
+    /*------ REGRESIÓN LINEAL PROG - CUMPLIDO 2020 ACUMULADO AL TRIMESTRE regional -------*/
     public function eficacia_por_regional($dep_id){
 
       for ($i=0; $i <=$this->tmes; $i++){ 
@@ -183,37 +214,59 @@ class reportes_evaluacionpoa extends CI_Controller{
       return $vtrimestre;
     }
 
-    /*========================*/
 
-    /*====== ECONOMIA REGIONAL ======*/
-    public function economia_por_regional($dep_id){
-      $suma_grupo_partida=$this->model_certificacion->suma_grupo_partida_programado_por_regional(4,$dep_id,10000); /// Partidas por defecto al trimestre
-      $monto_grupo_partida=0;
-      if(count($suma_grupo_partida)!=0){
-        $monto_grupo_partida=$suma_grupo_partida[0]['suma_partida'];
+    ////-----------------------------------------------------------------------
+
+    /*------ REGRESIÓN LINEAL PROG - CUMPLIDO 2026 ACUMULADO AL TRIMESTRE DISTRITAL-------*/
+    public function eficacia_por_distrital($dist_id){
+
+      for ($i=0; $i <=$this->tmes; $i++){ 
+
+        $tr[2][$i]=0; /// Prog
+        $tr[3][$i]=0; /// cumplidas
+        $tr[4][$i]=0; /// no cumplidas
+        $tr[5][$i]=0; /// eficacia %
+        $tr[6][$i]=0; /// no eficacia %
+
       }
 
-      $suma_ppto_certificado=$this->model_certificacion->suma_monto_certificado_por_regional(4,$dep_id); //// Presupuesto Certificado al trimestre
-      $monto_ppto_certificado=0;
-      if(count($suma_ppto_certificado)!=0){
-        $monto_ppto_certificado=$suma_ppto_certificado[0]['ppto_certificado'];
+      for ($i=1; $i <=$this->tmes; $i++) {
+        $valor=$this->obtiene_datos_evaluacíon_por_distrital($dist_id,$i,1);
+        $tr[2][$i]=$valor[1]; /// Prog
+        $tr[3][$i]=$valor[2]; /// cumplidas
+        $tr[4][$i]=($tr[2][$i]-$tr[3][$i]); /// No cumplidas
+        if($tr[2][$i]!=0){
+          $tr[5][$i]=round((($tr[3][$i]/$tr[2][$i])*100),2); /// eficacia
+        }
+        $tr[6][$i]=(100-$tr[5][$i]);
       }
 
-      $suma_ppto_asignado=$this->model_evalinstitucional->monto_total_programado_trimestre_por_regional(4,$dep_id); //// Presupuesto Asignado POA al trimestre
-      $monto_ppto_asignado=0;
-      if(count($suma_ppto_asignado)!=0){
-        $monto_ppto_asignado=$suma_ppto_asignado[0]['ppto_programado'];
-      }
-
-      $datos[1]=$monto_grupo_partida+$monto_ppto_certificado; /// Total Certificado
-      $datos[2]=$monto_ppto_asignado; /// Total Asignado
-      $datos[3]=0; /// % Eficiencia
-      if($datos[2]!=0){
-        $datos[3]=round((($datos[1]/$datos[2])*100),2);
-      }
-
-      return $datos;
+    return $tr;
     }
+
+    /*------ OBTIENE DATOS DE EVALUACIÓN 2026 - DISTRITAL -------*/
+    public function obtiene_datos_evaluacíon_por_distrital($dist_id,$trimestre,$tipo_evaluacion){
+      $nro_ope_eval=0; $nro_cumplidas=0;
+      for ($i=1; $i <=$trimestre; $i++) {
+        $programadas=$this->model_evalinstitucional->nro_operaciones_programadas_distrital($dist_id,$i,4);
+        if(count($programadas)!=0){
+          $nro_ope_eval=$nro_ope_eval+$programadas[0]['total'];
+        }
+
+        if(count($this->model_evalinstitucional->list_operaciones_evaluadas_unidad_trimestre_tipo_distrital($dist_id,$i,$tipo_evaluacion,4))!=0){
+          $nro_cumplidas=$nro_cumplidas+count($this->model_evalinstitucional->list_operaciones_evaluadas_unidad_trimestre_tipo_distrital($dist_id,$i,$tipo_evaluacion,4));
+        }
+      }
+
+      $vtrimestre[1]=$nro_ope_eval; // nro evaluadas
+      $vtrimestre[2]=$nro_cumplidas; // Cumplidas/Proceso/No Cumplidos
+
+      return $vtrimestre;
+    }
+
+
+
+
 
 
 
@@ -271,38 +324,6 @@ class reportes_evaluacionpoa extends CI_Controller{
       return $vtrimestre;
     }
 
-  /*========================*/
-
-
-  /*====== ECONOMIA UNIDAD/PROYECTO ======*/
-    public function economia_por_unidad($aper_id,$proy_id){
-      $suma_grupo_partida=$this->model_certificacion->suma_grupo_partida_programado($aper_id,10000); /// Partidas por defecto
-      $monto_grupo_partida=0;
-      if(count($suma_grupo_partida)!=0){
-        $monto_grupo_partida=$suma_grupo_partida[0]['suma_partida'];
-      }
-
-      $suma_ppto_certificado=$this->model_certificacion->suma_monto_certificado_unidad($proy_id); //// Presupuesto Certificado
-      $monto_ppto_certificado=0;
-      if(count($suma_ppto_certificado)!=0){
-        $monto_ppto_certificado=$suma_ppto_certificado[0]['ppto_certificado'];
-      }
-
-      $suma_ppto_asignado=$this->model_certificacion->monto_total_programado_trimestre($aper_id); //// Presupuesto Asignado POA por trimestre
-      $monto_ppto_asignado=0;
-      if(count($suma_ppto_asignado)!=0){
-        $monto_ppto_asignado=$suma_ppto_asignado[0]['ppto_programado'];
-      }
-
-      $datos[1]=$monto_grupo_partida+$monto_ppto_certificado; /// Total Certificado
-      $datos[2]=$monto_ppto_asignado; /// Total Asignado
-      $datos[3]=0; /// % Eficiencia
-      if($datos[2]!=0){
-        $datos[3]=round((($datos[1]/$datos[2])*100),2);
-      }
-
-      return $datos;
-    }
 
     /*------ EFICIENCIA POR UNIDAD ------*/
     public function eficiencia_unidad($eficacia,$economia){

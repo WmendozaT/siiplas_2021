@@ -17,10 +17,10 @@ class Model_evalprograma extends CI_Model{
                 $sql = '
                 select apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,count(pr.prod_id) total_actividad
                 from aperturaprogramatica apg
-                Inner Join lista_poa_gastocorriente_nacional('.$this->gestion.') as poa On poa.prog=apg.aper_programa
+                Inner Join lista_poa_gastocorriente_nacional('.$this->gestion.') as poa On poa.aper_programa=apg.aper_programa
                 Inner Join vista_componentes_dictamen as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as pr On pr.com_id=c.com_id
-                where apg.aper_gestion='.$this->gestion.' and apg.aper_asignado=\'1\' and pr.estado!=\'3\' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')
+                where apg.aper_gestion='.$this->gestion.' and apg.aper_asignado=\'1\' and pr.estado!=\'3\' and (poa.aper_programa!=\'97\' and poa.aper_programa!=\'98\' and poa.aper_programa!=\'99\')
                 group by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion
                 order by apg.aper_programa asc';
             }
@@ -28,10 +28,10 @@ class Model_evalprograma extends CI_Model{
                 $sql = '
                 select apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,count(*) total_actividad
                 from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
-                Inner Join aperturaprogramatica as apg On apg.aper_programa=poa.prog
+                Inner Join aperturaprogramatica as apg On apg.aper_programa=poa.aper_programa
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as prod On prod.com_id=c.com_id
-                where c.estado!=\'3\' and prod.estado!=\'3\' and apg.aper_asignado=\'1\' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
+                where c.estado!=\'3\' and prod.estado!=\'3\' and apg.aper_asignado=\'1\' and (poa.aper_programa!=\'098\' and poa.aper_programa!=\'099\' and poa.aper_programa!=\'720\')
                 group by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion
                 order by apg.aper_programa asc';
             }
@@ -58,7 +58,7 @@ class Model_evalprograma extends CI_Model{
 
         if($this->gestion>2023){
             $sql = '
-                select poa.prog aper_programa,count(pr.prod_id) total
+                select poa.aper_programa,count(pr.prod_id) total
                 from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as pr On pr.com_id=c.com_id
@@ -69,14 +69,14 @@ class Model_evalprograma extends CI_Model{
                     group by prod_id
                 ) as pprog On pprog.prod_id=pr.prod_id
                 
-                where poa.prog=\''.$programa.'\' and c.estado!=\'3\' and pr.estado!=\'3\' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')
-                group by poa.prog';
+                where poa.aper_programa=\''.$programa.'\' and c.estado!=\'3\' and pr.estado!=\'3\' and (poa.aper_programa!=\'97\' and poa.aper_programa!=\'98\' and poa.aper_programa!=\'99\')
+                group by poa.aper_programa';
         }
         else{
             $sql = '
             select apg.aper_programa,count(*) total
             from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
-            Inner Join aperturaprogramatica as apg On apg.aper_programa=poa.prog
+            Inner Join aperturaprogramatica as apg On apg.aper_programa=poa.aper_programa
             Inner Join _componentes as c On c.pfec_id=poa.pfec_id
             Inner Join _productos as prod On prod.com_id=c.com_id
              Inner Join (
@@ -85,7 +85,7 @@ class Model_evalprograma extends CI_Model{
                     where (m_id>='.$vi.' and m_id<='.$vf.') and pg_fis!=\'0\'
                     group by prod_id
                 ) as pprog On pprog.prod_id=prod.prod_id
-            where apg.aper_programa=\''.$programa.'\' and c.estado!=\'3\' and prod.estado!=\'3\' and apg.aper_asignado=\'1\' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
+            where apg.aper_programa=\''.$programa.'\' and c.estado!=\'3\' and prod.estado!=\'3\' and apg.aper_asignado=\'1\' and (poa.aper_programa!=\'098\' and poa.aper_programa!=\'099\' and poa.aper_programa!=\'720\')
             group by apg.aper_programa';
         }
 
@@ -96,20 +96,20 @@ class Model_evalprograma extends CI_Model{
     /*--- LISTA OPERACIONES EVALUADAS (CUMPLIDAS-PROCESO-NO CUMPLIDAS) APERTURA REGIONAL ---*/
     public function list_operaciones_evaluadas_institucional_trimestre($programa,$trimestre,$tipo_eval,$tp_id){
         if($this->gestion>2023){
-            $sql = 'select poa.prog aper_programa,poa.proy aper_proyecto,poa.act aper_actividad,poa.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
+            $sql = 'select poa.aper_programa,poa.aper_proyecto,poa.aper_actividad,poa.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
                     from lista_poa_gastocorriente_nacional('.$this->gestion.') poa 
                     Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                     Inner Join _productos as prod On prod.com_id=c.com_id
                     Inner Join _productos_trimestral as pt On prod.prod_id=pt.prod_id
-                    where poa.prog=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')';
+                    where poa.aper_programa=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.aper_programa!=\'97\' and poa.aper_programa!=\'98\' and poa.aper_programa!=\'99\')';
         }
         else{
-            $sql = 'select poa.prog aper_programa,poa.proy aper_proyecto,poa.act aper_actividad,poa.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
+            $sql = 'select poa.aper_programa,poa.aper_proyecto,poa.aper_actividad,poa.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
                     from lista_poa_gastocorriente_nacional('.$this->gestion.') poa 
                     Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                     Inner Join _productos as prod On prod.com_id=c.com_id
                     Inner Join _productos_trimestral as pt On prod.prod_id=pt.prod_id
-                    where poa.prog=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')';
+                    where poa.aper_programa=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.aper_programa!=\'098\' and poa.aper_programa!=\'099\' and poa.aper_programa!=\'720\')';
         }
 
         $query = $this->db->query($sql);
@@ -122,10 +122,10 @@ class Model_evalprograma extends CI_Model{
                 $sql = '
                 select poa.dep_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,count(pr.prod_id) total_actividad
                 from aperturaprogramatica apg
-                Inner Join lista_poa_gastocorriente_nacional('.$this->gestion.') as poa On poa.prog=apg.aper_programa
+                Inner Join lista_poa_gastocorriente_nacional('.$this->gestion.') as poa On poa.aper_programa=apg.aper_programa
                 Inner Join vista_componentes_dictamen as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as pr On pr.com_id=c.com_id
-                where poa.dep_id='.$dep_id.' and apg.aper_gestion='.$this->gestion.' and apg.aper_asignado=\'1\' and pr.estado!=\'3\' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')
+                where poa.dep_id='.$dep_id.' and apg.aper_gestion='.$this->gestion.' and apg.aper_asignado=\'1\' and pr.estado!=\'3\' and (poa.aper_programa!=\'97\' and poa.aper_programa!=\'98\' and poa.aper_programa!=\'99\')
                 group by poa.dep_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion
                 order by poa.dep_id,apg.aper_programa asc';
             }
@@ -133,10 +133,10 @@ class Model_evalprograma extends CI_Model{
                 $sql = '
                 select poa.dep_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,count(pr.prod_id) total_actividad
                 from aperturaprogramatica apg
-                Inner Join lista_poa_gastocorriente_nacional('.$this->gestion.') as poa On poa.prog=apg.aper_programa
+                Inner Join lista_poa_gastocorriente_nacional('.$this->gestion.') as poa On poa.aper_programa=apg.aper_programa
                 Inner Join vista_componentes_dictamen as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as pr On pr.com_id=c.com_id
-                where poa.dep_id='.$dep_id.' and apg.aper_gestion='.$this->gestion.' and apg.aper_asignado=\'1\' and pr.estado!=\'3\' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
+                where poa.dep_id='.$dep_id.' and apg.aper_gestion='.$this->gestion.' and apg.aper_asignado=\'1\' and pr.estado!=\'3\' and (poa.aper_programa!=\'098\' and poa.aper_programa!=\'099\' and poa.aper_programa!=\'720\')
                 group by poa.dep_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion
                 order by poa.dep_id,apg.aper_programa asc';
             }
@@ -164,7 +164,7 @@ class Model_evalprograma extends CI_Model{
 
         if($this->gestion>2023){
             $sql = '
-                select poa.dep_id,poa.prog aper_programa,count(pr.prod_id) total
+                select poa.dep_id,poa.aper_programa,count(pr.prod_id) total
                 from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as pr On pr.com_id=c.com_id
@@ -175,14 +175,14 @@ class Model_evalprograma extends CI_Model{
                     group by prod_id
                 ) as pprog On pprog.prod_id=pr.prod_id
                 
-                where poa.dep_id='.$dep_id.' and poa.prog=\''.$programa.'\' and c.estado!=\'3\' and pr.estado!=\'3\' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')
-                group by poa.dep_id,poa.prog';
+                where poa.dep_id='.$dep_id.' and poa.aper_programa=\''.$programa.'\' and c.estado!=\'3\' and pr.estado!=\'3\' and (poa.aper_programa!=\'97\' and poa.aper_programa!=\'98\' and poa.aper_programa!=\'99\')
+                group by poa.dep_id,poa.aper_programa';
         }
         else{
             $sql = '
                 select poa.dep_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,count(pr.prod_id) total
                 from aperturaprogramatica apg
-                Inner Join lista_poa_gastocorriente_nacional('.$this->gestion.') as poa On poa.prog=apg.aper_programa
+                Inner Join lista_poa_gastocorriente_nacional('.$this->gestion.') as poa On poa.aper_programa=apg.aper_programa
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as pr On pr.com_id=c.com_id
                  Inner Join (
@@ -192,7 +192,7 @@ class Model_evalprograma extends CI_Model{
                     group by prod_id
                 ) as pprog On pprog.prod_id=pr.prod_id
                 
-                where poa.dep_id='.$dep_id.' and apg.aper_programa=\''.$programa.'\' and c.estado!=\'3\' and pr.estado!=\'3\' and apg.aper_asignado=\'1\' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
+                where poa.dep_id='.$dep_id.' and apg.aper_programa=\''.$programa.'\' and c.estado!=\'3\' and pr.estado!=\'3\' and apg.aper_asignado=\'1\' and (poa.aper_programa!=\'098\' and poa.aper_programa!=\'099\' and poa.aper_programa!=\'720\')
                 group by poa.dep_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion
                 order by poa.dep_id,apg.aper_programa asc';
         }
@@ -205,20 +205,20 @@ class Model_evalprograma extends CI_Model{
     /*--- LISTA OPERACIONES EVALUADAS (CUMPLIDAS-PROCESO-NO CUMPLIDAS) APERTURA REGIONAL ---*/
     public function list_operaciones_evaluadas_regional_trimestre($dep_id,$programa,$trimestre,$tipo_eval,$tp_id){
         if($this->gestion>2023){
-            $sql = 'select poa.dep_id,poa.prog aper_programa,poa.proy aper_proyecto,poa.act aper_actividad,poa.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
+            $sql = 'select poa.dep_id,poa.aper_programa,poa.aper_proyecto,poa.aper_actividad,poa.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
                     from lista_poa_gastocorriente_nacional('.$this->gestion.') poa 
                     Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                     Inner Join _productos as prod On prod.com_id=c.com_id
                     Inner Join _productos_trimestral as pt On prod.prod_id=pt.prod_id
-                    where poa.dep_id='.$dep_id.' and poa.prog=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')';
+                    where poa.dep_id='.$dep_id.' and poa.aper_programa=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.aper_programa!=\'97\' and poa.aper_programa!=\'98\' and poa.aper_programa!=\'99\')';
         }
         else{
-            $sql = 'select poa.dep_id,poa.prog aper_programa,poa.proy aper_proyecto,poa.act aper_actividad,poa.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
+            $sql = 'select poa.dep_id,poa.aper_programa,poa.aper_proyecto,poa.aper_actividad,poa.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
                     from lista_poa_gastocorriente_nacional('.$this->gestion.') poa 
                     Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                     Inner Join _productos as prod On prod.com_id=c.com_id
                     Inner Join _productos_trimestral as pt On prod.prod_id=pt.prod_id
-                    where poa.dep_id='.$dep_id.' and poa.prog=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')';
+                    where poa.dep_id='.$dep_id.' and poa.aper_programa=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.aper_programa!=\'098\' and poa.aper_programa!=\'099\' and poa.aper_programa!=\'720\')';
         }
 
         $query = $this->db->query($sql);
@@ -234,10 +234,10 @@ class Model_evalprograma extends CI_Model{
                 $sql = '
                 select poa.dist_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,count(pr.prod_id) total_actividad
                 from aperturaprogramatica apg
-                Inner Join lista_poa_gastocorriente_nacional('.$this->gestion.') as poa On poa.prog=apg.aper_programa
+                Inner Join lista_poa_gastocorriente_nacional('.$this->gestion.') as poa On poa.aper_programa=apg.aper_programa
                 Inner Join vista_componentes_dictamen as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as pr On pr.com_id=c.com_id
-                where poa.dist_id='.$dist_id.' and apg.aper_gestion='.$this->gestion.' and apg.aper_asignado=\'1\' and pr.estado!=\'3\' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')
+                where poa.dist_id='.$dist_id.' and apg.aper_gestion='.$this->gestion.' and apg.aper_asignado=\'1\' and pr.estado!=\'3\' and (poa.aper_programa!=\'97\' and poa.aper_programa!=\'98\' and poa.aper_programa!=\'99\')
                 group by poa.dist_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion
                 order by poa.dist_id,apg.aper_programa asc';
             }
@@ -245,10 +245,10 @@ class Model_evalprograma extends CI_Model{
                 $sql = '
                 select poa.dist_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,count(*) total_actividad
                 from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
-                Inner Join aperturaprogramatica as apg On apg.aper_programa=poa.prog
+                Inner Join aperturaprogramatica as apg On apg.aper_programa=poa.aper_programa
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as prod On prod.com_id=c.com_id
-                where poa.dist_id='.$dist_id.' and c.estado!=\'3\' and prod.estado!=\'3\' and apg.aper_asignado=\'1\' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
+                where poa.dist_id='.$dist_id.' and c.estado!=\'3\' and prod.estado!=\'3\' and apg.aper_asignado=\'1\' and (poa.aper_programa!=\'098\' and poa.aper_programa!=\'099\' and poa.aper_programa!=\'720\')
                 group by poa.dist_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion
                 order by apg.aper_programa asc';
             }
@@ -275,7 +275,7 @@ class Model_evalprograma extends CI_Model{
 
         if($this->gestion>2023){
              $sql = '
-                select poa.dist_id,poa.prog aper_programa,count(pr.prod_id) total
+                select poa.dist_id,poa.aper_programa,count(pr.prod_id) total
                 from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as pr On pr.com_id=c.com_id
@@ -286,14 +286,14 @@ class Model_evalprograma extends CI_Model{
                     group by prod_id
                 ) as pprog On pprog.prod_id=pr.prod_id
                 
-                where poa.dist_id='.$dist_id.' and poa.prog=\''.$programa.'\' and c.estado!=\'3\' and pr.estado!=\'3\' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')
-                group by poa.dist_id,poa.prog';
+                where poa.dist_id='.$dist_id.' and poa.aper_programa=\''.$programa.'\' and c.estado!=\'3\' and pr.estado!=\'3\' and (poa.aper_programa!=\'97\' and poa.aper_programa!=\'98\' and poa.aper_programa!=\'99\')
+                group by poa.dist_id,poa.aper_programa';
         }
         else{
             $sql = '
             select poa.dist_id,apg.aper_programa,count(*) total
             from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
-            Inner Join aperturaprogramatica as apg On apg.aper_programa=poa.prog
+            Inner Join aperturaprogramatica as apg On apg.aper_programa=poa.aper_programa
             Inner Join _componentes as c On c.pfec_id=poa.pfec_id
             Inner Join _productos as prod On prod.com_id=c.com_id
              Inner Join (
@@ -302,7 +302,7 @@ class Model_evalprograma extends CI_Model{
                     where (m_id>='.$vi.' and m_id<='.$vf.') and pg_fis!=\'0\'
                     group by prod_id
                 ) as pprog On pprog.prod_id=prod.prod_id
-            where poa.dist_id='.$dist_id.' and apg.aper_programa=\''.$programa.'\' and c.estado!=\'3\' and prod.estado!=\'3\' and apg.aper_asignado=\'1\' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
+            where poa.dist_id='.$dist_id.' and apg.aper_programa=\''.$programa.'\' and c.estado!=\'3\' and prod.estado!=\'3\' and apg.aper_asignado=\'1\' and (poa.aper_programa!=\'098\' and poa.aper_programa!=\'099\' and poa.aper_programa!=\'720\')
             group by poa.dist_id,apg.aper_programa';
         }
 
@@ -313,20 +313,20 @@ class Model_evalprograma extends CI_Model{
     /*--- LISTA OPERACIONES EVALUADAS (CUMPLIDAS-PROCESO-NO CUMPLIDAS) APERTURA DISTRITAL ---*/
     public function list_operaciones_evaluadas_distrital_trimestre($dist_id,$programa,$trimestre,$tipo_eval,$tp_id){
         if($this->gestion>2023){
-            $sql = 'select poa.dist_id,poa.prog aper_programa,poa.proy aper_proyecto,poa.act aper_actividad,poa.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
+            $sql = 'select poa.dist_id,poa.aper_programa,poa.aper_proyecto,poa.aper_actividad,poa.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
                     from lista_poa_gastocorriente_nacional('.$this->gestion.') poa 
                     Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                     Inner Join _productos as prod On prod.com_id=c.com_id
                     Inner Join _productos_trimestral as pt On prod.prod_id=pt.prod_id
-                    where poa.dist_id='.$dist_id.' and poa.prog=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')';
+                    where poa.dist_id='.$dist_id.' and poa.aper_programa=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.aper_programa!=\'97\' and poa.aper_programa!=\'98\' and poa.aper_programa!=\'99\')';
         }
         else{
-            $sql = 'select poa.dist_id,poa.prog aper_programa,poa.proy aper_proyecto,poa.act aper_actividad,poa.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
+            $sql = 'select poa.dist_id,poa.aper_programa,poa.aper_proyecto,poa.aper_actividad,poa.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
                     from lista_poa_gastocorriente_nacional('.$this->gestion.') poa 
                     Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                     Inner Join _productos as prod On prod.com_id=c.com_id
                     Inner Join _productos_trimestral as pt On prod.prod_id=pt.prod_id
-                    where poa.dist_id='.$dist_id.' and poa.prog=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')';
+                    where poa.dist_id='.$dist_id.' and poa.aper_programa=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.aper_programa!=\'098\' and poa.aper_programa!=\'099\' and poa.aper_programa!=\'720\')';
         }
 
         $query = $this->db->query($sql);

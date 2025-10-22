@@ -851,7 +851,7 @@ class Evaluacionpoa extends CI_Controller{
             $tabla.='<tr style="font-size: 10px;" bgcolor='.$color.'>';
             $tabla.='<td style="width:1;height:10px;" align=center>'.$nro.'</td>';
             $tabla.='<td style="width:10%;">'.strtoupper($row['dist_distrital']).'</td>';
-            $tabla.='<td style="width:10%;">'.$row['prog'].' - '.$row['tipo'].' '.$row['actividad'].' '.$row['abrev'].'</td>';
+            $tabla.='<td style="width:10%;">'.$row['aper_programa'].' - '.$row['tipo'].' '.$row['actividad'].' '.$row['abrev'].'</td>';
             $tabla.='<td style="width:5%;" align=center>';
             $procesos=$this->model_componente->lista_subactividad($row['proy_id']);
               $tabla.=' <div class="btn-group">

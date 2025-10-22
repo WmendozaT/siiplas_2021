@@ -238,7 +238,7 @@ class Crep_evalform1 extends CI_Controller {
      $eficacia=0;
      foreach($lista_acp as $row){
       $cumplimiento=$this->get_cumplimiento_acp($row['og_id'],$tp);
-        $eficacia=$eficacia+$cumplimiento; /// cumplimiento trimestral/Acumulado
+        $eficacia=$eficacia+$cumplimiento[1]; /// cumplimiento trimestral/Acumulado
      }
 
      if(count($lista_acp)!=0){
@@ -304,6 +304,9 @@ class Crep_evalform1 extends CI_Controller {
               <th style="text-align:center;"></th>
               <th style="text-align:center;">(%) CUMPLIMIENTO GESTIÓN</th>
               <th style="text-align:center;"></th>
+              <th style="text-align:center;">META</th>
+              <th style="text-align:center;">EJECUTADO TRIM.</th>
+              <th style="text-align:center;">EJECUTADO ANUAL.</th>
             </tr>
           </thead>
           <tbody>';
@@ -318,6 +321,9 @@ class Crep_evalform1 extends CI_Controller {
               <td style="width:5%; text-align:center;">'.$this->semaforo_cumplimiento_acp($matriz[$i][3],0).'</td>
               <td style="width:5%; color:#14665c; font-size:15px; text-align:right;"><b>'.$matriz_gestion[$i][3].' %</b></td>
               <td style="width:5%; text-align:center;">'.$this->semaforo_cumplimiento_acp($matriz_gestion[$i][3],0).'</td>
+              <td>'.$matriz[$i][5].'</td>
+              <td>'.$matriz[$i][6].'</td>
+              <td>'.$matriz_gestion[$i][6].'</td>
             </tr>';
           $suma_trimestral=$suma_trimestral+$matriz[$i][3];
           $suma_acumulado=$suma_acumulado+$matriz_gestion[$i][3];
@@ -329,6 +335,9 @@ class Crep_evalform1 extends CI_Controller {
             <td style="font-size:16px; text-align:right"><b>'.round(($suma_trimestral/count($this->model_objetivogestion->get_list_acp_institucional_alineados_a_form2())),2).' %</b></td>
             <td></td>
             <td style="font-size:16px; text-align:right;"><b>'.round(($suma_acumulado/count($this->model_objetivogestion->get_list_acp_institucional_alineados_a_form2())),2).' %</b></td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td></td>
         </tr>
         </table>
@@ -450,6 +459,7 @@ class Crep_evalform1 extends CI_Controller {
   //// Matriz lista de cumplimiento de Form 1 Institucional 
   public function matriz_cumplimiento_form1_institucional($tp){
     $lista_acp=$this->model_objetivogestion->get_list_acp_institucional_alineados_a_form2();
+    $matriz = array(); // O simplemente: $matriz = [];
      for ($i=0; $i <count($lista_acp); $i++) { 
       for ($j=0; $j <5 ; $j++) { 
         $matriz[$i][$j]=0;
@@ -464,8 +474,10 @@ class Crep_evalform1 extends CI_Controller {
         $matriz[$nro][0]=$row['og_id']; /// cod OG
         $matriz[$nro][1]='<b>ACP.- '.$row['og_codigo'].'</b>'; /// cod OG
         $matriz[$nro][2]=$row['og_objetivo']; /// detalle OG
+        $matriz[$nro][3]=$cumplimiento[1]; /// cumplimiento trimestral/Acumulado %
         $matriz[$nro][4]=$row['og_indicador']; /// indicador del acp
-        $matriz[$nro][3]=$cumplimiento; /// cumplimiento trimestral/Acumulado
+        $matriz[$nro][5]=$row['programado_total']; /// Meta programado a la gestion
+        $matriz[$nro][6]=$cumplimiento[2]; /// ejecucion acumulado
       $nro++;
      }
 
@@ -482,7 +494,8 @@ class Crep_evalform1 extends CI_Controller {
       $list_form2_alineado_a_acp=$this->model_objetivogestion->get_list_form2_x_ogestion($og_id);
     }
 
-    $cumplimiento_acp=0;
+    $matriz[1]=0;$matriz[2]=0;
+    $cumplimiento_acp=0;$ejecutado_abs=0;
     foreach($list_form2_alineado_a_acp as $f2){
         $get_trm_ejec=$this->model_objetivoregion->get_ejec_form2_institucional_al_trimestre($f2['og_codigo'],$f2['or_codigo'],$this->tmes); /// Temporalidad Ejecutado trimestre
       if($tp==1){ 
@@ -492,14 +505,17 @@ class Crep_evalform1 extends CI_Controller {
       $ejec_form2_institucional=0;
       if(count($get_trm_ejec)!=0){
         $ejec_form2_institucional=$get_trm_ejec[0]['ejecutado'];
+
       } 
 
-      $ejecutado=0;
+      $ejecutado=0; // %
       if($f2['programado_total']!=0){
-        $ejecutado=round((($ejec_form2_institucional/$f2['programado_total'])*100),2);
+        $ejecutado=round((($ejec_form2_institucional/$f2['programado_total'])*100),2); /// %
+
       }
 
-      $cumplimiento_acp=$cumplimiento_acp+$ejecutado;
+      $cumplimiento_acp=$cumplimiento_acp+$ejecutado; /// %
+      $ejecutado_abs=$ejecutado_abs+$ejec_form2_institucional; /// valor abs
     }
     ///-----------------------
     
@@ -507,7 +523,11 @@ class Crep_evalform1 extends CI_Controller {
       $cumplimiento_acp=round(($cumplimiento_acp/count($list_form2_alineado_a_acp)),2);
     }
     
-    return $cumplimiento_acp;
+
+    $matriz[1]=$cumplimiento_acp;
+    $matriz[2]=$ejecutado_abs;
+
+    return $matriz;
   }
 
 

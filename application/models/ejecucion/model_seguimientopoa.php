@@ -26,8 +26,18 @@ class Model_seguimientopoa extends CI_Model{
 
     /*-- LISTA DE REGIONALES CON SU META TOTAL  --*/
     public function get_meta_total_regionales(){
-        $sql = 'select *
-                from metatotal_operaciones_regionales('.$this->gestion.')';
+        /*$sql = 'select *
+                from metatotal_operaciones_regionales('.$this->gestion.')';*/
+                $sql = '
+                select dep.dep_id ,dep.dep_cod,dep.dep_departamento, SUM(meta) meta
+                from lista_poa_gastocorriente_nacional('.$this->gestion.') dep
+                Inner Join (select c.pfec_id,SUM(prod_meta) meta
+                from _componentes c
+                Inner Join v_operaciones_subactividad as prod On prod.com_id=c.com_id
+                where c.estado!=3
+                group by c.pfec_id) as dat On dat.pfec_id=dep.pfec_id
+                group by dep.dep_id,dep.dep_cod,dep.dep_departamento
+                order by dep.dep_cod asc';
 
         $query = $this->db->query($sql);
         return $query->result_array();

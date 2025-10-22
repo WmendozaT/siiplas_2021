@@ -155,9 +155,9 @@ class Model_notificacion extends CI_Model{
         else{
              $sql = '
                 select proy.*,c.com_id,c.com_componente
-                from lista_poa_gastocorriente_distrital('.$dist_id.','.$this->gestion.') proy
+                from lista_poa_gastocorriente_nacional('.$this->gestion.') proy
                 Inner Join _componentes as c On c.pfec_id=proy.pfec_id
-                where proy.tipo!=\'""\'';
+                where proy.dist_id='.$dist_id.' and proy.tipo!=\'""\'';
         }
 
         

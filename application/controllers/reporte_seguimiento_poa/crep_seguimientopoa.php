@@ -288,7 +288,7 @@ class Crep_seguimientopoa extends CI_Controller {
           $tabla.='
           <tr>
             <td style="width:2%;height:15px;" align=center>'.$nro.'</td>
-            <td style="width:10%;" align=center>'.$row['da'].'</td>
+            <td style="width:10%;" align=center>'.$row['dep_cod'].'</td>
             <td style="width:30%;">'.strtoupper($row['dep_departamento']).'</td>
             <td style="width:15%;" align=right>'.$meta[1].'</td>
             <td style="width:15%;" align=right>'.$meta[2].'</td>
