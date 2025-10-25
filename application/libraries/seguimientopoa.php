@@ -137,8 +137,8 @@ class Seguimientopoa extends CI_Controller{
       return $tabla;
     }
 
-      /*------- CABECERA REPORTE SEGUIMIENTO POA (GRAFICO)------*/
-/*    function cabecera_seguimiento($establecimiento,$subactividad,$tipo_titulo,$trm_id){
+      /*------- CABECERA REPORTE SEGUIMIENTO POA POR UNIDAD (GRAFICO)------*/
+    /*function cabecera_seguimiento($establecimiento,$subactividad,$tipo_titulo,$trm_id){
       $fase=$this->model_faseetapa->get_fase($subactividad[0]['pfec_id']);
       $proyecto=$this->model_proyecto->get_id_proyecto($fase[0]['proy_id']);
       $trimestre=$this->model_evaluacion->get_trimestre($trm_id);
